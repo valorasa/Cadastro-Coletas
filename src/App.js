@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App() {
+import PageNotFound from "./shared/pages/404";
+import PickUpsPage from "./pages/PickUps";
+import PickUpForm from "./pages/PickUps/form";
+import LoginPage from "./shared/pages/login";
+import PrivateRoute from "./shared/pages/privateRoute";
+
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/">
+          <Route index element={<LoginPage />} />
+        </Route>
+        <Route exact path='/pickups' element={<PrivateRoute component={PickUpsPage} />} />
+        <Route exact path='/pickups/new' element={<PrivateRoute component={PickUpForm} />} />
+        <Route exact path='/pickups/new/:id' element={<PrivateRoute component={PickUpForm} />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
