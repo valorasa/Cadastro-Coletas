@@ -72,8 +72,8 @@ const LoginPage = () => {
     event.preventDefault();
     setLoading(true);
     const userPool = new CognitoUserPool({
-      UserPoolId: "us-east-2_jPQAfvNOU", // process.env.COGNITO_USER_POOL_ID,
-      ClientId: "32ukukqocjmgtm5ubb4dbjdilk", //process.env.COGNITO_CLIENT_ID,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
+      ClientId: process.env.COGNITO_CLIENT_ID,
     });
     const cognitoUser = new CognitoUser({
       Username: username,
