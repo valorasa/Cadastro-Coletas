@@ -6,7 +6,7 @@ const NavigationBar = () => {
     <header>
       <Navbar bg="primary" variant="dark" sticky="top">
         <Container>
-          <Navbar.Brand>Testes Roteirização</Navbar.Brand>
+          {/* <Navbar.Brand></Navbar.Brand> */}
           <Nav className="me-auto">
             <NavLink
               to="/pickups"

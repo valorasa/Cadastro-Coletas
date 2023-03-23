@@ -78,7 +78,7 @@ const PickUpsPage = () => {
       <NavigationBar />
       <main className="container">
         <div className="d-flex justify-content-between my-3">
-          <h1> Coletas</h1>
+          <h1> </h1>
           <Link to="new">
             <Button>
               Adicionar <FiPlus />
