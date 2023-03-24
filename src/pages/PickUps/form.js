@@ -3,6 +3,7 @@ import axiosInstance from "../../setup/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import NavigationBar from "../../shared/components/NavigationBar";
 import { Alert, Form, Button, Row } from "react-bootstrap";
+import jwtDecode from 'jwt-decode';
 
 const PickUpForm = () => {
   const params = useParams();
@@ -86,15 +87,18 @@ const PickUpForm = () => {
   };
 
 
+
+  const accessToken = sessionStorage.getItem("accessToken");
+  const decodedToken = jwtDecode(accessToken);
+  const userId = decodedToken.sub;
+
+
   const handleBagSelection = (event) => {
     setBagType(event.target.value);
     setWeight(numBags * bagWeights[event.target.value]);
   };
   async function savePickUp() {
     setLoading(true);
-
-    
-
 
     const requestBody = {
       driverId: 1,
@@ -106,6 +110,7 @@ const PickUpForm = () => {
       longitude: "-46.735237115607426",
       obs,
       createdAt: date,
+      userId: userId
     };
     try {
       !!params.id

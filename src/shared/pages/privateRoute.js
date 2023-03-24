@@ -6,7 +6,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+    const token = sessionStorage.getItem("accessToken");
     if (!token) {
       navigate("/");
 

@@ -3,6 +3,7 @@ import { Button, Form } from "react-bootstrap";
 import { CognitoUserPool, AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
 import { useNavigate } from 'react-router-dom';
 import NavigationBar from "../../shared/components/NavigationBar";
+import jwtDecode from 'jwt-decode';
 
 
 const LoginPage = () => {
@@ -33,7 +34,7 @@ const LoginPage = () => {
       onSuccess: (result) => {
         setLoading(false);
         const accessToken = result.getAccessToken().getJwtToken();
-        localStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("accessToken", accessToken);
         setSession(accessToken);
         navigate('/pickups');
         // Redirect to your authenticated route
@@ -54,7 +55,7 @@ const LoginPage = () => {
           {
             onSuccess: (result) => {
               const accessToken = result.getAccessToken().getJwtToken();
-              localStorage.setItem("accessToken", accessToken);
+              sessionStorage.setItem("accessToken", accessToken);
               setSession(accessToken);
               navigate('/pickups');
               // Redirect to your authenticated route
@@ -103,6 +104,7 @@ const LoginPage = () => {
       );
     });
   };
+ 
 
   return (
     <>
