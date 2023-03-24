@@ -101,7 +101,7 @@ const PickUpForm = () => {
     setLoading(true);
 
     const requestBody = {
-      driverId: 1,
+     // driverId: 1,
       truckId,
       typeId: typeWasteId,
       condominiumId,
