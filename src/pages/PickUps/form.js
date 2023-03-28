@@ -26,10 +26,15 @@ const PickUpForm = () => {
   const [typeWasteId, setTypeWasteId] = useState();
   const [typeWastes, setTypeWastes] = useState([]);
 
+  const [discardPlaceId, setDisardPlaceId] = useState();
+  const [discardPlace, setDisardPlace] = useState([]);
+
+
   async function findPickUp() {
     setCondominiumId(condominiums[0].id);
     setTruckId(trucks[0].id);
     setTypeWasteId(typeWastes[0].id);
+    setDisardPlaceId(discardPlace[0].id)
 
     if (!!params.id) {
       setLoading(true);
@@ -45,12 +50,28 @@ const PickUpForm = () => {
     }
   }
 
+
+  
   async function getCondominiums() {
     const response = await axiosInstance.get("/condominiums");
     const data = response.data;
     setCondominiums(data.filter((item) => item.active === 1));
   }
 
+  async function findDiscardPlace() {
+    setLoading(true);
+  
+    try {
+      const response = await axiosInstance.get(`/discardplace`);
+      const data = response.data;
+      setDisardPlace(data.map(item => ({ id: item.id, name: item.name })));
+    } catch (error) {
+      console.log(error);
+    }
+  
+    setLoading(false);
+  }
+  
   async function getTypeWastes() {
     setLoading(true);
     const response = await axiosInstance.get("/typewaste");
@@ -66,14 +87,16 @@ const PickUpForm = () => {
     setLoading(false);
   }
 
+  
   useEffect(() => {
     getCondominiums();
     getTypeWastes();
     getTrucks();
+    findDiscardPlace();
   }, []);
 
   useEffect(() => {
-    if (condominiums.length > 0 && typeWastes.length > 0 && trucks.length > 0) {
+    if (condominiums.length > 0 && typeWastes.length > 0 && trucks.length > 0 && discardPlace.length > 0) {
       findPickUp();
     }
   }, [condominiums, typeWastes, trucks]);
@@ -99,7 +122,7 @@ const PickUpForm = () => {
   };
   async function savePickUp() {
     setLoading(true);
-
+    
     const requestBody = {
      // driverId: 1,
       truckId,
@@ -109,8 +132,9 @@ const PickUpForm = () => {
       latitude: "-23.52692337133458",
       longitude: "-46.735237115607426",
       obs,
-      createdAt: date,
-      userId: userId
+      createdAt: date,//"2023-04-18 00:00:00",
+      userId: userId,
+      discardplaceId: discardPlaceId
     };
     try {
       !!params.id
@@ -129,6 +153,8 @@ const PickUpForm = () => {
     }
     setLoading(false);
   }
+
+
   return (
     <>
       <NavigationBar />
@@ -294,10 +320,30 @@ const PickUpForm = () => {
                   ))
                 )}
               </Form.Select>
-            </Form.Group>
+              </Form.Group>
 
-            <Row>
-              <Button
+              <Form.Group className="mb-3">
+                <Form.Label>Locais de descarte</Form.Label>
+                <Form.Select
+                  onChange={(event) => setDisardPlaceId(event.target.value)}
+                  defaultValue={discardPlaceId}
+                  value={discardPlaceId}
+                  disabled={!!params.id ? true : false}
+                >
+                  {discardPlace.length === 0 ? (
+                    <option>Carregando</option>
+                  ) : (
+                    discardPlace.map((e, key) => (
+                      <option value={e.id} key={key}>
+                        {e.name}
+                      </option>
+                    ))
+                  )}
+                </Form.Select>
+              </Form.Group>
+
+              <Row>
+                <Button
                 variant="primary"
                 type="submit"
                 onClick={(e) => {
