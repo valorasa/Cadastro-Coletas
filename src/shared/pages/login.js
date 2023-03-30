@@ -19,8 +19,8 @@ const LoginPage = () => {
     event.preventDefault();
     setLoading(true);
     const userPool = new CognitoUserPool({
-      UserPoolId: "us-east-2_jPQAfvNOU", // process.env.COGNITO_USER_POOL_ID,
-      ClientId: "32ukukqocjmgtm5ubb4dbjdilk", //process.env.COGNITO_CLIENT_ID,
+      UserPoolId: "us-east-2_13ejYzH7D",// process.env.COGNITO_USER_POOL_ID,
+      ClientId: "5k2uit15qofq04uf459klaok4n"//process.env.COGNITO_CLIENT_ID,
     });
     const authenticationDetails = new AuthenticationDetails({
       Username: username,
@@ -113,10 +113,10 @@ const LoginPage = () => {
         <h1>Login</h1>
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="username">
-            <Form.Label>Username</Form.Label>
+            <Form.Label>Email</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter username"
+              placeholder="Email"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               required
@@ -124,10 +124,10 @@ const LoginPage = () => {
           </Form.Group>
   
           <Form.Group controlId="password" className="mb-3">
-            <Form.Label>Password</Form.Label>
+            <Form.Label>Senha</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Enter password"
+              placeholder="Senha"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
@@ -136,10 +136,10 @@ const LoginPage = () => {
   
           {showChangePasswordForm ? (
             <Form.Group controlId="newPassword" className="mb-3">
-              <Form.Label>New Password</Form.Label>
+              <Form.Label>Nova Senha</Form.Label>
               <Form.Control
                 type="password"
-                placeholder="Enter new password"
+                placeholder="Nova senha"
                 value={newPassword}
                 onChange={(event) => setNewPassword(event.target.value)}
                 required
