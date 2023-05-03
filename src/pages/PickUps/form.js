@@ -122,35 +122,52 @@ const PickUpForm = () => {
   };
   async function savePickUp() {
     setLoading(true);
-    
-    const requestBody = {
-     // driverId: 1,
-      truckId,
-      typeId: typeWasteId,
-      condominiumId,
-      weight: weight.toString().replace(",", "."),
-      latitude: "-23.52692337133458",
-      longitude: "-46.735237115607426",
-      obs,
-      createdAt: date,//"2023-04-18 00:00:00",
-      userId: userId,
-      discardplaceId: discardPlaceId
-    };
+  
     try {
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+  
+      const latitude = position.coords.latitude.toString();
+      const longitude = position.coords.longitude.toString();
+
+  
+    
+      const requestBody = {
+        truckId,
+        typeId: typeWasteId,
+        condominiumId,
+        weight: weight.toString().replace(",", "."),
+        latitude: latitude,
+        longitude: longitude,
+        obs,
+        createdAt: date,
+        userId: userId,
+        discardplaceId: null
+      };
+  
       !!params.id
         ? await axiosInstance.put(`pickups/${params.id}`, requestBody)
         : await axiosInstance.post("pickups/save", requestBody);
+  
       setAlert({
         success: true,
         message: "Salvo com sucesso",
       });
-      navigate("./", { replace: true }); //modificar aqui para retornar as pickups
-    } catch (e) {
+  
+      navigate("./", { replace: true });
+    } catch (error) {
+      console.error(error);
       setAlert({
         success: false,
         message: "Erro de validação dos dados, confirme as entradas",
       });
+      
+      if (error.code === 1) { // erro de permissão negada
+        alert("Para continuar, permita o acesso à sua localização.");
+      }
     }
+  
     setLoading(false);
   }
 
@@ -301,8 +318,6 @@ const PickUpForm = () => {
                 onChange={(event) => setObs(event.target.value)}
               />
             </Form.Group>
-
-
             <Form.Group className="mb-3">
               <Form.Label>Caminhão</Form.Label>
               <Form.Select
@@ -321,27 +336,6 @@ const PickUpForm = () => {
                 )}
               </Form.Select>
               </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>Locais de descarte</Form.Label>
-                <Form.Select
-                  onChange={(event) => setDisardPlaceId(event.target.value)}
-                  defaultValue={discardPlaceId}
-                  value={discardPlaceId}
-                  disabled={!!params.id ? true : false}
-                >
-                  {discardPlace.length === 0 ? (
-                    <option>Carregando</option>
-                  ) : (
-                    discardPlace.map((e, key) => (
-                      <option value={e.id} key={key}>
-                        {e.name}
-                      </option>
-                    ))
-                  )}
-                </Form.Select>
-              </Form.Group>
-
               <Row>
                 <Button
                 variant="primary"

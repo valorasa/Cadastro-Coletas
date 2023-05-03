@@ -14,6 +14,12 @@ const NavigationBar = () => {
             >
               Coletas
             </NavLink>
+            <NavLink
+              to="/destination"
+              className="text-white mx-2 text-decoration-none"
+            >
+              Destinação
+            </NavLink>
           </Nav>
         </Container>
       </Navbar>

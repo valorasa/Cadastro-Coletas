@@ -5,6 +5,7 @@ import PickUpsPage from "./pages/PickUps";
 import PickUpForm from "./pages/PickUps/form";
 import LoginPage from "./shared/pages/login";
 import PrivateRoute from "./shared/pages/privateRoute";
+import Destination from "./pages/Destination/form";
 
 
 const App = () => {
@@ -16,7 +17,8 @@ const App = () => {
         </Route>
         <Route exact path='/pickups' element={<PrivateRoute component={PickUpsPage} />} />
         <Route exact path='/pickups/new' element={<PrivateRoute component={PickUpForm} />} />
-        <Route exact path='/pickups/new/:id' element={<PrivateRoute component={PickUpForm} />} />
+        <Route exact path='/pickups/edit/:id' element={<PrivateRoute component={PickUpForm} />} />
+        <Route exact path='/destination' element={<PrivateRoute component={Destination} />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
