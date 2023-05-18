@@ -4,7 +4,7 @@ import { Form, Table, Button, ButtonGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FiEdit2, FiTrash, FiPlus } from "react-icons/fi";
 import NavigationBar from "../../shared/components/NavigationBar";
-import jwtDecode from 'jwt-decode';
+
 
 const PickUpsPage = () => {
   const [condominiums, setCondominiums] = useState([]);
@@ -39,7 +39,7 @@ const PickUpsPage = () => {
     setLoading(true);
     const response = await axiosInstance.get("/pickups");
     const data = response.data;
-    const result = data.filter((e) => e.condominiumId === condominiumId);
+    const result = data.filter((e) => String(e.condominiumId) === String(condominiumId));
 
     const sorted = result.sort(function (a, b) {
       return new Date(b.createdAt) - new Date(a.createdAt);

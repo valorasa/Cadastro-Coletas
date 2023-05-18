@@ -155,7 +155,9 @@ const PickUpForm = () => {
         message: "Salvo com sucesso",
       });
   
-      navigate("./", { replace: true });
+      setTimeout(() => {
+        navigate("/pickups", { replace: true });
+      }, 100); 
     } catch (error) {
       console.error(error);
       setAlert({

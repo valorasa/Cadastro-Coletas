@@ -16,12 +16,16 @@ const Destination = () => {
 
     const [collectsTruck, setCollectsTruck] = useState([]);
     const [selectedWeightSum, setSelectedWeightSum] = useState(0);
-    const [weight, serWeight] = useState()
+    const [weight, setWeight] = useState()
 
     const [discardPlaceId, setDisardPlaceId] = useState();
     const [discardPlace, setDisardPlace] = useState([]);
 
     const [pickups, setPickups] = useState([]);
+    const [formValidated, setFormValidated] = useState(false);
+    const [atLeastOneChecked, setAtLeastOneChecked] = useState(false);
+
+  
 
     async function getTrucks() {
         setLoading(true);
@@ -85,6 +89,24 @@ const Destination = () => {
         );
     };
 
+    const validateForm = () => {
+        const requiredFields = [truckId, discardPlaceId, weight];
+        const isFormValid = requiredFields.every((field) => field !== undefined && field !== "");
+        setFormValidated(isFormValid);
+      };
+
+      const validateCheckbox = () => {
+        setAtLeastOneChecked(pickups.length > 0);
+      };
+
+      useEffect(() => {
+        validateCheckbox();
+      }, [pickups]);
+
+      useEffect(() => {
+        validateForm();
+      }, [truckId, discardPlaceId, weight]);
+
     async function savePickUp() {
         setLoading(true);
 
@@ -113,6 +135,15 @@ const Destination = () => {
                 success: true,
                 message: "Salvo com sucesso",
             });
+
+            setTruckId("");
+            setCollectsTruck([]);
+            setSelectedWeightSum(0);
+            setWeight("");
+            setDisardPlaceId("");
+            setPickups([]);
+
+            await new Promise((resolve) => setTimeout(resolve, 1000));
 
             navigate("./", { replace: true });
         } catch (error) {
@@ -191,7 +222,7 @@ const Destination = () => {
                             <Form.Control
                                 placeholder="Peso real"
                                 value={weight}
-                                onChange={(event) => serWeight(event.target.value)}
+                                onChange={(event) => setWeight(event.target.value)}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -223,6 +254,7 @@ const Destination = () => {
                                     e.preventDefault();
                                     savePickUp();
                                 }}
+                                disabled={!formValidated || !atLeastOneChecked}
                             >
                                 Salvar
                             </Button>
