@@ -111,6 +111,7 @@ const PickUpsPage = () => {
               <tr>
                 <th>Data</th>
                 <th>Peso</th>
+                <th>Peso Ajustado</th>
                 <th>Tipo de resíduo</th>
                 <th>Caminhão</th>
                 <th>Observações</th>
@@ -122,6 +123,7 @@ const PickUpsPage = () => {
                 <tr key={index}>
                   <td>{dateFormat(e.createdAt)}</td>
                   <td>{e.weight}</td>
+                  <td>{e.adjustedWeight}</td>
                   <td>{findTypeWasteName(e.typeId)}</td>
                   <td>{findTruckName(e.truckId)}</td>
                   <td>{e.obs}</td>
