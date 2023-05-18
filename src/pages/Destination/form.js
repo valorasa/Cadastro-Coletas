@@ -143,7 +143,7 @@ const Destination = () => {
             setDisardPlaceId("");
             setPickups([]);
 
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 500));
 
             navigate("./", { replace: true });
         } catch (error) {
