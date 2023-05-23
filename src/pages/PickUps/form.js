@@ -127,12 +127,21 @@ const PickUpForm = () => {
       const position = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
-  
+
       const latitude = position.coords.latitude.toString();
       const longitude = position.coords.longitude.toString();
 
+      const currentDate = new Date();
+      const selectedDate = new Date(date); // 'date' é o valor fornecido pelo usuário
+
+      selectedDate.setHours(currentDate.getHours());
+      selectedDate.setMinutes(currentDate.getMinutes());
+      selectedDate.setSeconds(currentDate.getSeconds());
+
+      const formattedDateTime = selectedDate.toISOString();
+
   
-    
+    console.log(formattedDateTime)
       const requestBody = {
         truckId,
         typeId: typeWasteId,
@@ -141,7 +150,7 @@ const PickUpForm = () => {
         latitude: latitude,
         longitude: longitude,
         obs,
-        createdAt: date,
+        createdAt:date,
         userId: userId,
         discardplaceId: null
       };

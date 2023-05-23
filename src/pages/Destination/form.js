@@ -120,12 +120,14 @@ const Destination = () => {
 
             const factor = weight / selectedWeightSum;
 
+            
+
             const requestBody = {
                 weight: weight.toString().replace(",", "."),
                 latitude: latitude,
                 longitude: longitude,
                 discardplaceId: discardPlaceId,
-                factor,
+              //  factor,
                 pickups: pickups
             };
 
