@@ -122,7 +122,7 @@ const PickUpForm = () => {
   };
   async function savePickUp() {
     setLoading(true);
-  
+    //2023-05-22T12:12:11.000Z
     try {
       const position = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -134,14 +134,14 @@ const PickUpForm = () => {
       const currentDate = new Date();
       const selectedDate = new Date(date); // 'date' é o valor fornecido pelo usuário
 
-      selectedDate.setHours(currentDate.getHours());
+      selectedDate.setHours(currentDate.getHours() - 3); // Subtrai 3 horas para ajustar ao fuso horário de Brasilia 
       selectedDate.setMinutes(currentDate.getMinutes());
       selectedDate.setSeconds(currentDate.getSeconds());
 
-      const formattedDateTime = selectedDate.toISOString();
+      const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
 
-  
-    console.log(formattedDateTime)
+
+
       const requestBody = {
         truckId,
         typeId: typeWasteId,
@@ -150,7 +150,7 @@ const PickUpForm = () => {
         latitude: latitude,
         longitude: longitude,
         obs,
-        createdAt:date,
+        createdAt: formattedDateTime,
         userId: userId,
         discardplaceId: null
       };

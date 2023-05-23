@@ -74,7 +74,7 @@ const PickUpsPage = () => {
     }
   }
 
- 
+
   return (
     <>
       <NavigationBar />
