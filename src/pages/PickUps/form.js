@@ -223,7 +223,6 @@ const PickUpForm = () => {
                 )}
               </Form.Select>
             </Form.Group>
-
             <Form.Group className="mb-3 ">
               <Form.Label>Data</Form.Label>
               <Form.Control

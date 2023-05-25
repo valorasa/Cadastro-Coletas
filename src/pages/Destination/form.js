@@ -25,6 +25,8 @@ const Destination = () => {
     const [formValidated, setFormValidated] = useState(false);
     const [atLeastOneChecked, setAtLeastOneChecked] = useState(false);
 
+    const [date, setDate] = useState();
+
   
 
     async function getTrucks() {
@@ -118,16 +120,26 @@ const Destination = () => {
             const latitude = position.coords.latitude.toString();
             const longitude = position.coords.longitude.toString();
 
-            const factor = weight / selectedWeightSum;
+            // const factor = weight / selectedWeightSum;
 
-            
-            
+            const currentDate = new Date();
+            const selectedDate = new Date(date); // 'date' é o valor fornecido pelo usuário
+
+            selectedDate.setHours(currentDate.getHours() - 3); // Subtrai 3 horas para ajustar ao fuso horário de Brasilia 
+            selectedDate.setMinutes(currentDate.getMinutes());
+            selectedDate.setSeconds(currentDate.getSeconds());
+
+            const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
+
+
+
             const requestBody = {
                 weight: weight.toString().replace(",", "."),
                 latitude: latitude,
                 longitude: longitude,
                 discardplaceId: discardPlaceId,
-              //  factor,
+                discartedAt: formattedDateTime,
+                //  factor,
                 pickups: pickups
             };
 
@@ -145,7 +157,7 @@ const Destination = () => {
             setDisardPlaceId("");
             setPickups([]);
 
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+           // await new Promise((resolve) => setTimeout(resolve, 1000));
 
             navigate("./", { replace: true });
         } catch (error) {
@@ -186,51 +198,60 @@ const Destination = () => {
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>Caminhão</Form.Label>
-                            <Form.Select value={truckId} onChange={handleTruckChange}>
-                                <option value="">Selecione o caminhão</option>
-                                {trucks.length === 0 ? (
-                                    <option>Carregando</option>
-                                ) : (
-                                    trucks.map((e, key) => (
-                                        <option value={e.id} key={key}>
-                                            {e.plate}
-                                        </option>
-                                    ))
-                                )}
-                            </Form.Select>
-                        </Form.Group>
-                        {!!truckId && collectsTruck.length > 0 ? (
-                            <Form.Group>
-                                <Form.Label>Condomínios</Form.Label>
-                                {collectsTruck.map((collect) => (
-                                    <div key={collect.id}>
-                                        <Form.Check
-                                            type="checkbox"
-                                            label={`${collect.condominiumName || "Nome não disponível"} - Peso: ${collect.weight} Kg`}
-                                            id={`collect-${collect.id}`}
-                                            value={collect.weight}
-                                            onChange={handleCheckboxChange}
-                                        />
-                                    </div>
-                                ))}
+                                <Form.Select value={truckId} onChange={handleTruckChange}>
+                                    <option value="">Selecione o caminhão</option>
+                                    {trucks.length === 0 ? (
+                                        <option>Carregando</option>
+                                    ) : (
+                                        trucks.map((e, key) => (
+                                            <option value={e.id} key={key}>
+                                                {e.plate}
+                                            </option>
+                                        ))
+                                    )}
+                                </Form.Select>
                             </Form.Group>
-                        ) : null}
-                        <Form.Group>
-                            <Form.Label>Peso Total:</Form.Label>
-                            <Form.Control type="text" value={selectedWeightSum} readOnly />
-                        </Form.Group>
-                        <Form.Group className="mb-3 ">
-                            <Form.Label>Pesagem</Form.Label>
-                            <Form.Control
-                                placeholder="Peso real"
-                                value={weight}
-                                onChange={(event) => setWeight(event.target.value)}
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Locais de descarte</Form.Label>
-                            <Form.Select
-                                onChange={(event) => setDisardPlaceId(event.target.value)}
+                            {!!truckId && collectsTruck.length > 0 ? (
+                                <Form.Group>
+                                    <Form.Label>Condomínios</Form.Label>
+                                    {collectsTruck.map((collect) => (
+                                        <div key={collect.id}>
+                                            <Form.Check
+                                                type="checkbox"
+                                                label={`${collect.condominiumName || "Nome não disponível"} - Peso: ${collect.weight} Kg`}
+                                                id={`collect-${collect.id}`}
+                                                value={collect.weight}
+                                                onChange={handleCheckboxChange}
+                                            />
+                                        </div>
+                                    ))}
+                                </Form.Group>
+                            ) : null}
+                            <Form.Group>
+                                <Form.Label>Peso Total:</Form.Label>
+                                <Form.Control type="text" value={selectedWeightSum} readOnly />
+                            </Form.Group>
+                            <Form.Group className="mb-3 ">
+                                <Form.Label>Pesagem</Form.Label>
+                                <Form.Control
+                                    placeholder="Peso real"
+                                    value={weight}
+                                    onChange={(event) => setWeight(event.target.value)}
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3 ">
+                                <Form.Label>Data</Form.Label>
+                                <Form.Control
+                                    type="date"
+                                    placeholder="Data"
+                                    defaultValue={date}
+                                    onChange={(event) => setDate(event.target.value)}
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Locais de descarte</Form.Label>
+                                <Form.Select
+                                    onChange={(event) => setDisardPlaceId(event.target.value)}
                                 defaultValue={discardPlaceId}
                                 value={discardPlaceId}
                                 disabled={!!params.id ? true : false}
