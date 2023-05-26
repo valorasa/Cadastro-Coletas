@@ -40,6 +40,7 @@ const Destination = () => {
         if (truckId) {
             const response = await axiosInstance.post(`/pickups/pending-by-truck-id?truckId=${truckId}`);
             const data = response.data;
+           
             setCollectsTruck(data);
         }
     }
@@ -218,7 +219,7 @@ const Destination = () => {
                                         <div key={collect.id}>
                                             <Form.Check
                                                 type="checkbox"
-                                                label={`${collect.condominium.name || "Nome não disponível"} - Peso: ${collect.weight} Kg`}
+                                                label={`${collect.condominiumName || "Nome não disponível"} - Peso: ${collect.weight} Kg`}
                                                 id={`collect-${collect.id}`}
                                                 value={collect.weight}
                                                 onChange={handleCheckboxChange}
