@@ -218,7 +218,7 @@ const Destination = () => {
                                         <div key={collect.id}>
                                             <Form.Check
                                                 type="checkbox"
-                                                label={`${collect.condominiumName || "Nome não disponível"} - Peso: ${collect.weight} Kg`}
+                                                label={`${collect.condominium.name || "Nome não disponível"} - Peso: ${collect.weight} Kg`}
                                                 id={`collect-${collect.id}`}
                                                 value={collect.weight}
                                                 onChange={handleCheckboxChange}
