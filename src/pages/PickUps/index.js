@@ -39,7 +39,6 @@ const PickUpsPage = () => {
     setLoading(true);
     const response = await axiosInstance.get("/pickups");
     const data = response.data;
-    console.log(data)
     const result = data.filter((e) => String(e.condominiumId) === String(condominiumId));
 
     const sorted = result.sort(function (a, b) {

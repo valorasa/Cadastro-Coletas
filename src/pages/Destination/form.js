@@ -3,7 +3,7 @@ import axiosInstance from "../../setup/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import NavigationBar from "../../shared/components/NavigationBar";
 import { Alert, Form, Row, Button } from "react-bootstrap";
-
+import moment from 'moment';
 
 const Destination = () => {
     const params = useParams();
@@ -124,7 +124,7 @@ const Destination = () => {
             // const factor = weight / selectedWeightSum;
 
             const currentDate = new Date();
-            const selectedDate = new Date(date); // 'date' é o valor fornecido pelo usuário
+            const selectedDate = moment(date, 'YYYY-MM-DD').toDate(); // 'date' é o valor fornecido pelo usuário
 
             selectedDate.setHours(currentDate.getHours() - 3); // Subtrai 3 horas para ajustar ao fuso horário de Brasilia 
             selectedDate.setMinutes(currentDate.getMinutes());

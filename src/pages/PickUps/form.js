@@ -4,6 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import NavigationBar from "../../shared/components/NavigationBar";
 import { Alert, Form, Button, Row } from "react-bootstrap";
 import jwtDecode from 'jwt-decode';
+import { useRef } from 'react';
+import moment from 'moment';
+
 
 const PickUpForm = () => {
   const params = useParams();
@@ -122,7 +125,7 @@ const PickUpForm = () => {
   };
   async function savePickUp() {
     setLoading(true);
-    //2023-05-22T12:12:11.000Z
+
     try {
       const position = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -132,12 +135,12 @@ const PickUpForm = () => {
       const longitude = position.coords.longitude.toString();
 
       const currentDate = new Date();
-      const selectedDate = new Date(date); // 'date' é o valor fornecido pelo usuário
-
-      selectedDate.setHours(currentDate.getHours() - 3); // Subtrai 3 horas para ajustar ao fuso horário de Brasilia 
+      //const selectedDate = new Date(date); // 'date' é o valor fornecido pelo usuário
+      const selectedDate = moment(date, 'YYYY-MM-DD').toDate();
+      selectedDate.setHours(currentDate.getHours() - 3);
       selectedDate.setMinutes(currentDate.getMinutes());
       selectedDate.setSeconds(currentDate.getSeconds());
-
+      
       const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
 
 
@@ -181,7 +184,9 @@ const PickUpForm = () => {
   
     setLoading(false);
   }
-
+  const handleMouseWheel = (event) => {
+    event.preventDefault();
+  };
 
   return (
     <>
@@ -223,13 +228,18 @@ const PickUpForm = () => {
                 )}
               </Form.Select>
             </Form.Group>
-            <Form.Group className="mb-3 ">
+            <Form.Group className="mb-3">
               <Form.Label>Data</Form.Label>
               <Form.Control
                 type="date"
                 placeholder="Data"
                 defaultValue={date}
                 onChange={(event) => setDate(event.target.value)}
+                ref={(input) => {
+                  if (input) {
+                    input.addEventListener('wheel', handleMouseWheel, { passive: false });
+                  }
+                }}
               />
             </Form.Group>
             <Form.Group className="mb-3">
