@@ -3,6 +3,7 @@ import axiosInstance from "../../setup/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import NavigationBar from "../../shared/components/NavigationBar";
 import { Alert, Form, Button, Row } from "react-bootstrap";
+import '../../style/form.css';
 import jwtDecode from 'jwt-decode';
 import { useRef } from 'react';
 import moment from 'moment';

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../setup/axios";
-import { Form, Table, Button, ButtonGroup } from "react-bootstrap";
+import { Form, Table, Button, ButtonGroup, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FiEdit2, FiTrash, FiPlus } from "react-icons/fi";
 import NavigationBar from "../../shared/components/NavigationBar";
@@ -78,7 +78,8 @@ const PickUpsPage = () => {
   return (
     <>
       <NavigationBar />
-      <main className="container">
+      {/* <main className="container"> */}
+        <Container>
         <div className="d-flex justify-content-between my-3">
           <h1> </h1>
           <Link to="new">
@@ -106,16 +107,16 @@ const PickUpsPage = () => {
         ) : pickUps.length === 0 ? (
           <p>Não há coletas registradas neste condomínio</p>
         ) : (
-          <Table striped bordered hover className="mb-3">
+          <Table striped bordered hover responsive className="mb-3">
             <thead>
               <tr>
                 <th>Data</th>
                 <th>Peso</th>
                 <th>Peso Ajustado</th>
-                <th>Tipo de resíduo</th>
+                <th className="d-none d-sm-table-cell">Tipo de resíduo</th>
                 <th>Caminhão</th>
-                <th>Observações</th>
-                <th>Ações</th>
+                <th className="d-none d-sm-table-cell">Observações</th>
+                {/* <th>Ações</th> */}
               </tr>
             </thead>
             <tbody>
@@ -124,10 +125,10 @@ const PickUpsPage = () => {
                   <td>{dateFormat(e.createdAt)}</td>
                   <td>{e.weight}</td>
                   <td>{e.adjustedWeight}</td>
-                  <td>{findTypeWasteName(e.typeId)}</td>
+                  <td className="d-none d-sm-table-cell">{findTypeWasteName(e.typeId)}</td>
                   <td>{findTruckName(e.truckId)}</td>
-                  <td>{e.obs}</td>
-                  <td>
+                  <td className="d-none d-sm-table-cell">{e.obs}</td>
+                  {/* <td>
                     <ButtonGroup className="d-flex justify-content-evenly">
                       <Link to={`edit/${e.id}`}>
                         <Button className="mx-1">
@@ -143,13 +144,14 @@ const PickUpsPage = () => {
                         </Button>
                       </Link>
                     </ButtonGroup>
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>
           </Table>
         )}
-      </main>
+      {/* </main> */}
+      </Container>
     </>
   );
 };
