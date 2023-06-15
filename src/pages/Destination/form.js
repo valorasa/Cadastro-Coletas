@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import NavigationBar from "../../shared/components/NavigationBar";
 import { Alert, Form, Row, Button } from "react-bootstrap";
 import moment from 'moment';
+import styles from '../../style/form.module.css';
 
 const Destination = () => {
     const params = useParams();
@@ -93,8 +94,8 @@ const Destination = () => {
     };
 
     const validateForm = () => {
-        const requiredFields = [truckId, discardPlaceId, weight];
-        const isFormValid = requiredFields.every((field) => field !== undefined && field !== "");
+        const requiredFields = [truckId, discardPlaceId, weight, date];
+        const isFormValid = requiredFields.every((field) => field !== undefined && field !== "" && field.date !== "dd/mm/aaaa");
         setFormValidated(isFormValid);
       };
 
@@ -158,7 +159,9 @@ const Destination = () => {
             setDisardPlaceId("");
             setPickups([]);
 
-           // await new Promise((resolve) => setTimeout(resolve, 1000));
+            setTimeout(() => {
+                setAlert(null); 
+              }, 5000);
 
             navigate("./", { replace: true });
         } catch (error) {
@@ -167,6 +170,17 @@ const Destination = () => {
                 success: false,
                 message: "Erro de validação dos dados, confirme as entradas",
             });
+
+            setTruckId("");
+            setCollectsTruck([]);
+            setSelectedWeightSum(0);
+            setWeight("");
+            setDisardPlaceId("");
+            setPickups([]);
+
+            setTimeout(() => {
+                setAlert(null); 
+              }, 5000);
 
             if (error.code === 1) { // erro de permissão negada
                 alert("Para continuar, permita o acesso à sua localização.");
@@ -250,14 +264,14 @@ const Destination = () => {
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <Form.Label>Locais de descarte</Form.Label>
+                                <Form.Label>Locais de destinação</Form.Label>
                                 <Form.Select
                                     onChange={(event) => setDisardPlaceId(event.target.value)}
                                 defaultValue={discardPlaceId}
                                 value={discardPlaceId}
                                 disabled={!!params.id ? true : false}
                             >
-                                 <option value="">Local de descarte</option>
+                                 <option value="">Local de destinação</option>
                                 {discardPlace.length === 0 ? (
                                     <option>Carregando</option>
                                 ) : (
@@ -272,7 +286,8 @@ const Destination = () => {
 
                         <Row>
                             <Button
-                                variant="primary"
+                                style={{backgroundColor: "#35a854"}}
+                                className="border-0"
                                 type="submit"
                                 onClick={(e) => {
                                     e.preventDefault();

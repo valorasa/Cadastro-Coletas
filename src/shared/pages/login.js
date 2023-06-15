@@ -3,7 +3,7 @@ import { Button, Form } from "react-bootstrap";
 import { CognitoUserPool, AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
 import { useNavigate } from 'react-router-dom';
 import NavigationBar from "../../shared/components/NavigationBar";
-import jwtDecode from 'jwt-decode';
+
 
 
 const LoginPage = () => {
@@ -14,13 +14,14 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
   const [session, setSession] = useState(null);
+  const [passwordValid, setPasswordValid] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     const userPool = new CognitoUserPool({
-      UserPoolId: "us-east-2_13ejYzH7D",// process.env.COGNITO_USER_POOL_ID,
-      ClientId: "5k2uit15qofq04uf459klaok4n"//process.env.COGNITO_CLIENT_ID,
+      UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
+      ClientId: process.env.REACT_APP_COGNITO_CLIENT_ID,
     });
     const authenticationDetails = new AuthenticationDetails({
       Username: username,
@@ -104,7 +105,19 @@ const LoginPage = () => {
       );
     });
   };
- 
+
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.])[a-zA-Z0-9!@#$%^&*.]{8,}$/;
+    //const passwordRegex = /([A-Z]{1,}[0-9]{1,}[^a-zA-Z0-9]{1,}){8,}/;
+
+    return passwordRegex.test(password);
+  };
+
+  const handleNewPasswordChange = (event) => {
+    const newPasswordValue = event.target.value;
+    setNewPassword(newPasswordValue);
+    setPasswordValid(validatePassword(newPasswordValue));
+  };
 
   return (
     <>
@@ -122,7 +135,7 @@ const LoginPage = () => {
               required
             />
           </Form.Group>
-  
+
           <Form.Group controlId="password" className="mb-3">
             <Form.Label>Senha</Form.Label>
             <Form.Control
@@ -133,21 +146,29 @@ const LoginPage = () => {
               required
             />
           </Form.Group>
-  
+
           {showChangePasswordForm ? (
             <Form.Group controlId="newPassword" className="mb-3">
               <Form.Label>Nova Senha</Form.Label>
               <Form.Control
                 type="password"
-                placeholder="Nova senha"
+                placeholder="A sua senha deve conter no mínimo 8 caracteres, no mínimo uma letra maiúscula, um caractere especial e um número"
                 value={newPassword}
-                onChange={(event) => setNewPassword(event.target.value)}
+                onChange={handleNewPasswordChange}
                 required
+                isInvalid={!passwordValid && newPassword.length > 0}
+                isValid={passwordValid && newPassword.length > 0}
               />
+              <Form.Control.Feedback type="invalid">
+                A senha deve conter no mínimo 8 caracteres, pelo menos uma letra maiúscula, um caractere especial e um número.
+              </Form.Control.Feedback>
+              <Form.Control.Feedback type="valid">Senha válida.</Form.Control.Feedback>
             </Form.Group>
           ) : null}
-  
-          <Button onClick={handleSubmit} variant="primary" type="submit" disabled={loading}>
+
+          <Button
+            style={{ backgroundColor: "#35a854" }}
+            onClick={handleSubmit} className="border-0" type="submit" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </Button>
         </Form>

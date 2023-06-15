@@ -3,10 +3,11 @@ import axiosInstance from "../../setup/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import NavigationBar from "../../shared/components/NavigationBar";
 import { Alert, Form, Button, Row } from "react-bootstrap";
-import '../../style/form.css';
+import styles from '../../style/form.module.css';
 import jwtDecode from 'jwt-decode';
 import { useRef } from 'react';
 import moment from 'moment';
+
 
 
 const PickUpForm = () => {
@@ -167,6 +168,7 @@ const PickUpForm = () => {
         success: true,
         message: "Salvo com sucesso",
       });
+
   
       setTimeout(() => {
         navigate("/pickups", { replace: true });
@@ -211,15 +213,18 @@ const PickUpForm = () => {
         ) : (
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Condomínio</Form.Label>
+              <Form.Label>Ponto de Coleta</Form.Label>
               <Form.Select
+              className={styles.customSelect}
                 onChange={(event) => setCondominiumId(event.target.value)}
-                defaultValue={condominiumId}
-                value={condominiumId}
+                //defaultValue={condominiumId}
+                //value={condominiumId}
                 disabled={!!params.id ? true : false}
               >
+                <option value="">Escolha o ponto de coleta</option>
                 {condominiums.length === 0 ? (
                   <option>Carregando</option>
+                  
                 ) : (
                   condominiums.map((e, key) => (
                     <option value={e.id} key={key}>
@@ -359,7 +364,8 @@ const PickUpForm = () => {
               </Form.Group>
               <Row>
                 <Button
-                variant="primary"
+                style={{backgroundColor: "#35a854"}}
+                className="border-0"
                 type="submit"
                 onClick={(e) => {
                   e.preventDefault();

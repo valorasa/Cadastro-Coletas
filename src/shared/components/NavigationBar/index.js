@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 const NavigationBar = () => {
   return (
     <header>
-      <Navbar bg="primary" variant="dark" sticky="top">
+      <Navbar style={{ backgroundColor: "#35a854" }} variant="light" sticky="top">
         <Container>
           {/* <Navbar.Brand></Navbar.Brand> */}
           <Nav className="me-auto">

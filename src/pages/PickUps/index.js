@@ -4,7 +4,7 @@ import { Form, Table, Button, ButtonGroup, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FiEdit2, FiTrash, FiPlus } from "react-icons/fi";
 import NavigationBar from "../../shared/components/NavigationBar";
-
+import styles from "../../style/form.module.css"
 
 const PickUpsPage = () => {
   const [condominiums, setCondominiums] = useState([]);
@@ -73,8 +73,7 @@ const PickUpsPage = () => {
       return result.plate;
     }
   }
-
-
+ 
   return (
     <>
       <NavigationBar />
@@ -83,7 +82,10 @@ const PickUpsPage = () => {
         <div className="d-flex justify-content-between my-3">
           <h1> </h1>
           <Link to="new">
-            <Button>
+            <Button style={{backgroundColor: "#35a854"}}
+           // variant="success"
+           className="border-0"
+            >
               Adicionar <FiPlus />
             </Button>
           </Link>
