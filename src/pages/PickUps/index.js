@@ -10,13 +10,13 @@ const PickUpsPage = () => {
   const [condominiums, setCondominiums] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pickUps, setPickUps] = useState([]);
-  const [condominiumId, setCondominiumId] = useState(1);
+  const [condominiumId, setCondominiumId] = useState(1 || "1");
   const [typeWastes, setTypeWastes] = useState([]);
   const [trucks, setTrucks] = useState([]);
   async function getCondominiums() {
     const response = await axiosInstance.get("/condominiums");
     const data = response.data;
-    setCondominiums(data.filter((item) => item.active === 1));
+    setCondominiums(data.filter((item) => item.active === 1 || "1"));
   }
   async function getTypeWastes() {
     setLoading(true);

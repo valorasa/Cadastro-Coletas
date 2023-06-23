@@ -34,6 +34,8 @@ const PickUpForm = () => {
   const [discardPlaceId, setDisardPlaceId] = useState();
   const [discardPlace, setDisardPlace] = useState([]);
 
+  const [sendMail, setSendMail] = useState(false)
+
 
   async function findPickUp() {
     setCondominiumId(condominiums[0].id);
@@ -60,7 +62,7 @@ const PickUpForm = () => {
   async function getCondominiums() {
     const response = await axiosInstance.get("/condominiums");
     const data = response.data;
-    setCondominiums(data.filter((item) => item.active === 1));
+    setCondominiums(data.filter((item) => item.active === 1 || "1"));
   }
 
   async function findDiscardPlace() {
@@ -125,6 +127,7 @@ const PickUpForm = () => {
     setBagType(event.target.value);
     setWeight(numBags * bagWeights[event.target.value]);
   };
+
   async function savePickUp() {
     setLoading(true);
 
@@ -144,9 +147,7 @@ const PickUpForm = () => {
       selectedDate.setSeconds(currentDate.getSeconds());
       
       const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
-
-
-
+      
       const requestBody = {
         truckId,
         typeId: typeWasteId,
@@ -163,7 +164,24 @@ const PickUpForm = () => {
       !!params.id
         ? await axiosInstance.put(`pickups/${params.id}`, requestBody)
         : await axiosInstance.post("pickups/save", requestBody);
-  
+
+     
+
+       const selectedCondominium = condominiums.find(cond => cond.id === condominiumId);
+       const emailTo = selectedCondominium?.managers[0]?.email || "Não informado";
+
+       const selectedTruck = trucks.find(truck => truck.id === truckId);
+       const truck = selectedTruck.plate;
+
+      if (sendMail && emailTo !== "Não informado") {
+        const requestBodyMail = {
+          emailTo,
+          truck,
+          bags: parseInt(numBags)
+        };
+
+        await axiosInstance.post("condominiums/mail", requestBodyMail);
+      }
       setAlert({
         success: true,
         message: "Salvo com sucesso",
@@ -187,6 +205,7 @@ const PickUpForm = () => {
   
     setLoading(false);
   }
+
   const handleMouseWheel = (event) => {
     event.preventDefault();
   };
@@ -231,14 +250,23 @@ const PickUpForm = () => {
                       {e.name}
                     </option>
                   ))
-                )}
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Data</Form.Label>
-              <Form.Control
-                type="date"
-                placeholder="Data"
+                  )}
+                </Form.Select>
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Enviar email</Form.Label>
+                <Form.Check
+                  type="checkbox"
+                  label="Enviar email para o ponto de coleta"
+                  checked={sendMail}
+                  onChange={(e) => setSendMail(e.target.checked)}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Data</Form.Label>
+                <Form.Control
+                  type="date"
+                  placeholder="Data"
                 defaultValue={date}
                 onChange={(event) => setDate(event.target.value)}
                 ref={(input) => {
