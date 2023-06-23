@@ -170,14 +170,18 @@ const PickUpForm = () => {
        const selectedCondominium = condominiums.find(cond => cond.id === condominiumId);
        const emailTo = selectedCondominium?.managers[0]?.email || "Não informado";
 
-       const selectedTruck = trucks.find(truck => truck.id === truckId);
+       const selectedTruck = trucks.find(truck => truck.id == truckId);
        const truck = selectedTruck.plate;
 
+       const selectedTypeWaste = typeWastes.find(typeWaste => typeWaste.id == typeWasteId)
+       const typeWaste = selectedTypeWaste.name
+      console.log(typeWaste)
       if (sendMail && emailTo !== "Não informado") {
         const requestBodyMail = {
           emailTo,
           truck,
-          bags: parseInt(numBags)
+          bags: parseInt(numBags),
+          typeWaste
         };
 
         await axiosInstance.post("condominiums/mail", requestBodyMail);
