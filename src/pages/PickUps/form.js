@@ -380,9 +380,10 @@ const PickUpForm = () => {
               <Form.Label>Caminhão</Form.Label>
               <Form.Select
                 onChange={(event) => setTruckId(event.target.value)}
-                defaultValue={truckId}
-                value={truckId}
+                // defaultValue={truckId}
+                // value={truckId}
               >
+                <option value="">Escolha o Caminhão</option>
                 {trucks.length === 0 ? (
                   <option>Carregando</option>
                 ) : (
