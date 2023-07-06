@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Alert } from "react-bootstrap";
 import { CognitoUserPool, AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
 import { useNavigate } from 'react-router-dom';
 import NavigationBar from "../../shared/components/NavigationBar";
-
 
 
 const LoginPage = () => {
@@ -15,6 +14,8 @@ const LoginPage = () => {
   const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
   const [session, setSession] = useState(null);
   const [passwordValid, setPasswordValid] = useState(false);
+  const [error, setError] = useState("");
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -31,6 +32,7 @@ const LoginPage = () => {
       Username: username,
       Pool: userPool,
     });
+
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (result) => {
         setLoading(false);
@@ -40,9 +42,14 @@ const LoginPage = () => {
         navigate('/pickups');
         // Redirect to your authenticated route
       },
+      
       onFailure: (err) => {
         setLoading(false);
+       // if(err.message == )
         console.log(err);
+        if(err.message === "Incorrect username or password.") {
+          setError("Usuário ou senha incorretos. Por favor, verifique suas credenciais e tente novamente.")
+        }
         if (err.code === "NEW_PASSWORD_REQUIRED") {
           setShowChangePasswordForm(true);
         }
@@ -124,6 +131,11 @@ const LoginPage = () => {
       <NavigationBar />
       <main className="container">
         <h1>Login</h1>
+        {error && (
+            <Alert variant="danger" className="mt-3">
+              {error}
+            </Alert>
+          )}
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="username">
             <Form.Label>Email</Form.Label>
@@ -135,7 +147,6 @@ const LoginPage = () => {
               required
             />
           </Form.Group>
-
           <Form.Group controlId="password" className="mb-3">
             <Form.Label>Senha</Form.Label>
             <Form.Control
