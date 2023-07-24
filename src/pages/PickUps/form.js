@@ -249,7 +249,8 @@ const PickUpForm = () => {
                   <option>Carregando</option>
                   
                 ) : (
-                  condominiums.map((e, key) => (
+                  [...condominiums].sort((a, b) => a.name.localeCompare(b.name))
+                  .map((e, key) => (
                     <option value={e.id} key={key}>
                       {e.name}
                     </option>
