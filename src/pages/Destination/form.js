@@ -25,6 +25,7 @@ const Destination = () => {
     const [pickups, setPickups] = useState([]);
     const [formValidated, setFormValidated] = useState(false);
     const [atLeastOneChecked, setAtLeastOneChecked] = useState(false);
+  
 
     const [date, setDate] = useState();
 
@@ -61,6 +62,26 @@ const Destination = () => {
     }
 
     useEffect(() => {
+         // Ask for location permission when the component is mounted
+         if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    // Handle successful permission here
+                    console.log("Location permission granted:", position);
+                    // You can use the latitude and longitude from `position` object
+                },
+                (error) => {
+                    if (error.code === error.PERMISSION_DENIED) {
+                        console.log("Permissão de localização negada pelo usuário");
+                        window.alert("Você tem que permitir acesso a sua localização")
+                    } else {
+                        console.log("Erro ao obter a localização:", error.message);
+                    }
+                }
+            );
+        } else {
+            console.log("Geolocation not available");
+        }
         getTrucks();
     }, []);
 
@@ -165,7 +186,9 @@ const Destination = () => {
 
             navigate("./", { replace: true });
         } catch (error) {
-            console.error(error);
+            if (error.code === 1) { // erro de permissão negada
+                alert("Para continuar, permita o acesso à sua localização.");
+            }
             setAlert({
                 success: false,
                 message: "Erro de validação dos dados, confirme as entradas",
@@ -182,9 +205,7 @@ const Destination = () => {
                 setAlert(null); 
               }, 5000);
 
-            if (error.code === 1) { // erro de permissão negada
-                alert("Para continuar, permita o acesso à sua localização.");
-            }
+
         }
 
         setLoading(false);
@@ -193,6 +214,7 @@ const Destination = () => {
     return (
         <>
             <NavigationBar />
+            
             <main className="container">
                 {!!alert ? (
                     <Alert

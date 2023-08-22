@@ -7,6 +7,7 @@ import styles from '../../style/form.module.css';
 import jwtDecode from 'jwt-decode';
 import { useRef } from 'react';
 import moment from 'moment';
+import Select from 'react-select';
 
 
 
@@ -27,6 +28,7 @@ const PickUpForm = () => {
 
   const [condominiumId, setCondominiumId] = useState();
   const [condominiums, setCondominiums] = useState([]);
+  const [searchText, setSearchText] = useState('');
 
   const [typeWasteId, setTypeWasteId] = useState();
   const [typeWastes, setTypeWastes] = useState([]);
@@ -214,6 +216,15 @@ const PickUpForm = () => {
     event.preventDefault();
   };
 
+  const filteredCondominiums = condominiums.filter(condominium => {
+    return condominium.name.toLowerCase().includes(searchText.toLowerCase());
+  });
+
+  const options = filteredCondominiums.map(condominium => ({
+    value: condominium.id,
+    label: condominium.name
+  }));
+
   return (
     <>
       <NavigationBar />
@@ -234,29 +245,18 @@ const PickUpForm = () => {
         {loading ? (
           <div className="spinner-border text-primary mx-auto" role="status" />
         ) : (
-          <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Ponto de Coleta</Form.Label>
-              <Form.Select
-              className={styles.customSelect}
-                onChange={(event) => setCondominiumId(event.target.value)}
-                //defaultValue={condominiumId}
-                //value={condominiumId}
-                disabled={!!params.id ? true : false}
-              >
-                <option value="">Escolha o ponto de coleta</option>
-                {condominiums.length === 0 ? (
-                  <option>Carregando</option>
-                  
-                ) : (
-                  [...condominiums].sort((a, b) => a.name.localeCompare(b.name))
-                  .map((e, key) => (
-                    <option value={e.id} key={key}>
-                      {e.name}
-                    </option>
-                  ))
-                  )}
-                </Form.Select>
+            <Form>
+              <Form.Group className="mb-3">
+                <Form.Label>Ponto de Coleta</Form.Label>
+                <Select
+                  className={styles.customSelect}
+                  options={options}
+                  onChange={(selectedOption) => setCondominiumId(selectedOption.value)}
+                  placeholder="Escolha o ponto de coleta"
+                  isDisabled={!!params.id}
+                  onInputChange={(value) => setSearchText(value)}
+                  inputValue={searchText}
+                />
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>Enviar email</Form.Label>
