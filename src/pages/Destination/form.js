@@ -154,7 +154,12 @@ const Destination = () => {
 
             const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
 
-
+            if(!latitude || latitude == '') {
+                setAlert({
+                    success: true,
+                    message: "Sem endereço",
+                });
+            }
 
             const requestBody = {
                 weight: weight.toString().replace(",", "."),
@@ -187,11 +192,32 @@ const Destination = () => {
             navigate("./", { replace: true });
         } catch (error) {
             if (error.code === 1) { // erro de permissão negada
-                alert("Para continuar, permita o acesso à sua localização.");
-            }
             setAlert({
                 success: false,
-                message: "Erro de validação dos dados, confirme as entradas",
+                message: "Para continuar, permita o acesso à sua localização.",
+            });
+
+            }
+
+            let errorMessage = "Erro de validação dos dados, confirme as entradas.";
+
+            // Adicione mensagens de erro específicas para campos que falharam na validação
+            if (!truckId || truckId === "") {
+                errorMessage += "\n- O campo 'Caminhão' é obrigatório.";
+            }
+    
+            if (!discardPlaceId || discardPlaceId === "") {
+                errorMessage += "\n- O campo 'Local de destinação' é obrigatório.";
+            }
+    
+            if (!weight || weight === "") {
+                errorMessage += "\n- O campo 'Pesagem' é obrigatório.";
+            }
+
+          
+            setAlert({
+                success: false,
+                message: errorMessage,
             });
 
             setTruckId("");
