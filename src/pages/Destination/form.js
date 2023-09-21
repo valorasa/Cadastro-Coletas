@@ -147,13 +147,14 @@ const Destination = () => {
             // const factor = weight / selectedWeightSum;
 
             const currentDate = new Date();
-            const selectedDate = moment(date, 'YYYY-MM-DD').toDate(); // 'date' é o valor fornecido pelo usuário
+            
+            // const selectedDate = moment(date, 'YYYY-MM-DD').toDate(); // 'date' é o valor fornecido pelo usuário
 
-            selectedDate.setHours(currentDate.getHours() - 3); // Subtrai 3 horas para ajustar ao fuso horário de Brasilia 
-            selectedDate.setMinutes(currentDate.getMinutes());
-            selectedDate.setSeconds(currentDate.getSeconds());
+            // selectedDate.setHours(currentDate.getHours() - 3); // Subtrai 3 horas para ajustar ao fuso horário de Brasilia 
+            // selectedDate.setMinutes(currentDate.getMinutes());
+            // selectedDate.setSeconds(currentDate.getSeconds());
 
-            const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
+            // const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
 
             if(!latitude || latitude == '') {
                 setAlert({
@@ -163,22 +164,29 @@ const Destination = () => {
             }
            // setRequestBodyToShow(requestBody);
             const requestBody = {
-                weight: weight.toString().replace(",", "."),
+                weight:  weight? weight.toString().replace(",", "."): null,
                 latitude: latitude,
                 longitude: longitude,
                 discardplaceId: discardPlaceId,
-                discartedAt: formattedDateTime,
+                discartedAt: currentDate,//formattedDateTime,
                 //  factor,
                 pickups: pickups
             };
 
-            await axiosInstance.post("routes/discard", requestBody);
-
-            setAlert({
-                success: true,
-                message: "Salvo com sucesso",
-            });
-
+            const response = await axiosInstance.post("routes/discard", requestBody);
+           
+            if(response.data.status == false){
+                setAlert({
+                    success: false,
+                    message: response.data.message,
+                });
+            }
+          
+            // setAlert({
+            //     success: true,
+            //     message: "salvo",
+            // });
+ 
             setTruckId("");
             setCollectsTruck([]);
             setSelectedWeightSum(0);
@@ -199,7 +207,7 @@ const Destination = () => {
             });
 
             }
-
+            console.log(err)
             // let errorMessage = "Erro de validação dos dados, confirme as entradas.";
 
             // // Adicione mensagens de erro específicas para campos que falharam na validação
@@ -303,7 +311,7 @@ const Destination = () => {
                                     onChange={(event) => setWeight(event.target.value)}
                                 />
                             </Form.Group>
-                            <Form.Group className="mb-3 ">
+                            {/* <Form.Group className="mb-3 ">
                                 <Form.Label>Data</Form.Label>
                                 <Form.Control
                                     type="date"
@@ -311,7 +319,7 @@ const Destination = () => {
                                     defaultValue={date}
                                     onChange={(event) => setDate(event.target.value)}
                                 />
-                            </Form.Group>
+                            </Form.Group> */}
                             <Form.Group className="mb-3">
                                 <Form.Label>Locais de destinação</Form.Label>
                                 <Form.Select
