@@ -29,6 +29,7 @@ const Destination = () => {
 
     const [date, setDate] = useState();
 
+    const [requestBodyToShow, setRequestBodyToShow] = useState(null);
   
 
     async function getTrucks() {
@@ -160,7 +161,7 @@ const Destination = () => {
                     message: "Sem endereço",
                 });
             }
-
+           // setRequestBodyToShow(requestBody);
             const requestBody = {
                 weight: weight.toString().replace(",", "."),
                 latitude: latitude,
@@ -190,8 +191,8 @@ const Destination = () => {
               }, 5000);
 
             navigate("./", { replace: true });
-        } catch (error) {
-            if (error.code === 1) { // erro de permissão negada
+        } catch (err) {
+            if (err.code === 1) { // erro de permissão negada
             setAlert({
                 success: false,
                 message: "Para continuar, permita o acesso à sua localização.",
@@ -199,25 +200,25 @@ const Destination = () => {
 
             }
 
-            let errorMessage = "Erro de validação dos dados, confirme as entradas.";
+            // let errorMessage = "Erro de validação dos dados, confirme as entradas.";
 
-            // Adicione mensagens de erro específicas para campos que falharam na validação
-            if (!truckId || truckId === "") {
-                errorMessage += "\n- O campo 'Caminhão' é obrigatório.";
-            }
+            // // Adicione mensagens de erro específicas para campos que falharam na validação
+            // if (!truckId || truckId === "") {
+            //     errorMessage += "\n- O campo 'Caminhão' é obrigatório.";
+            // }
     
-            if (!discardPlaceId || discardPlaceId === "") {
-                errorMessage += "\n- O campo 'Local de destinação' é obrigatório.";
-            }
+            // if (!discardPlaceId || discardPlaceId === "") {
+            //     errorMessage += "\n- O campo 'Local de destinação' é obrigatório.";
+            // }
     
-            if (!weight || weight === "") {
-                errorMessage += "\n- O campo 'Pesagem' é obrigatório.";
-            }
+            // if (!weight || weight === "") {
+            //     errorMessage += "\n- O campo 'Pesagem' é obrigatório.";
+            // }
 
           
             setAlert({
                 success: false,
-                message: errorMessage,
+                message:err.message,
             });
 
             setTruckId("");
@@ -332,21 +333,27 @@ const Destination = () => {
                             </Form.Select>
                         </Form.Group>
 
-                        <Row>
-                            <Button
-                                style={{backgroundColor: "#35a854"}}
-                                className="border-0"
-                                type="submit"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    savePickUp();
-                                }}
-                                disabled={!formValidated || !atLeastOneChecked}
-                            >
-                                Salvar
-                            </Button>
-                        </Row>
-                    </Form>
+                            <Row>
+                                <Button
+                                    style={{ backgroundColor: "#35a854" }}
+                                    className="border-0"
+                                    type="submit"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        savePickUp();
+                                    }}
+                                  //  disabled={!formValidated || !atLeastOneChecked}
+                                >
+                                    Salvar
+                                </Button>
+                            </Row>
+                            {/* <div>
+                                {requestBodyToShow && (
+                                    <pre>{JSON.stringify(requestBodyToShow, null, 2)}</pre>
+                                )}
+                            </div> */}
+
+                        </Form>
                 )}
             </main>
         </>
