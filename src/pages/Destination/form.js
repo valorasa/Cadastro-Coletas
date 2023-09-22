@@ -147,6 +147,7 @@ const Destination = () => {
             // const factor = weight / selectedWeightSum;
 
             const currentDate = new Date();
+            const formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " ");
             
             // const selectedDate = moment(date, 'YYYY-MM-DD').toDate(); // 'date' é o valor fornecido pelo usuário
 
@@ -168,7 +169,7 @@ const Destination = () => {
                 latitude: latitude,
                 longitude: longitude,
                 discardplaceId: discardPlaceId,
-                discartedAt: currentDate,//formattedDateTime,
+                discartedAt: formattedDateTime,
                 //  factor,
                 pickups: pickups
             };
