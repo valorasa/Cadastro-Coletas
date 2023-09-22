@@ -169,7 +169,7 @@ const Destination = () => {
                 latitude: latitude,
                 longitude: longitude,
                 discardplaceId: discardPlaceId,
-                discartedAt: formattedDateTime,
+                discartedAt: formattedDate,//formattedDateTime,
                 //  factor,
                 pickups: pickups
             };
