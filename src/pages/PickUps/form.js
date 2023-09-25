@@ -115,7 +115,13 @@ const PickUpForm = () => {
     "Bag B": 35,
     "Bag C": 70,
     "Bag D": 50,
-    "Bag E": 1 // peso de 1kg para Bag D
+    "Bag E": 1,
+    "Bag F": 250, // Caçamba 5 m3
+    "Bag G": 800, // Caçamba 16 m3
+    "Bag H": 1300, // Caçamba 26 m3
+    "Bag I": 1800, // Caçamba 36 m3
+    "Bag J": 50, // Container 1 m3
+    "Bag K": 100 // Container 2 m3
   };
 
 
@@ -316,6 +322,15 @@ const PickUpForm = () => {
                 <option value="">Escolha o tipo de bag</option>
                 {typeWasteId === "1" || typeWasteId === "2" ? (
                   <option value="Bag D">Big bag (50kg)</option>
+                ) : typeWasteId === "16" ? (
+                  <>
+                  <option value="Bag F">Caçamba 5 m3 (250kg)</option>
+                  <option value="Bag G">Caçamba 16 m3 (800kg)</option>
+                  <option value="Bag H">Caçamba 26 m3 (1300kg)</option>
+                  <option value="Bag I">Caçamba 36 m3 (1800kg)</option>
+                  <option value="Bag J">Container 1 m3 (50kg)</option>
+                  <option value="Bag K">Container 2 m3 (100kg)</option>
+                </>
                 ) : (
                   <>
                     <option value="Bag A">Sacos (16 a 18Kg)</option>
@@ -323,6 +338,7 @@ const PickUpForm = () => {
                     <option value="Bag C">Bombonas (70kg)</option>
                   </>
                 )}
+                
                 <option value="Bag E">Kg</option>
               </Form.Select>
             </Form.Group>

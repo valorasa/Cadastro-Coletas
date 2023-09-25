@@ -5,14 +5,18 @@ import { Link } from "react-router-dom";
 import { FiEdit2, FiTrash, FiPlus } from "react-icons/fi";
 import NavigationBar from "../../shared/components/NavigationBar";
 import styles from "../../style/form.module.css"
+import Select from 'react-select';
+import { useParams } from "react-router-dom";
 
 const PickUpsPage = () => {
+  const params = useParams();
   const [condominiums, setCondominiums] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pickUps, setPickUps] = useState([]);
   const [condominiumId, setCondominiumId] = useState(1 || "1");
   const [typeWastes, setTypeWastes] = useState([]);
   const [trucks, setTrucks] = useState([]);
+  const [searchText, setSearchText] = useState('');
   async function getCondominiums() {
     const response = await axiosInstance.get("/condominiums");
     const data = response.data;
@@ -73,6 +77,15 @@ const PickUpsPage = () => {
       return result.plate;
     }
   }
+
+  const filteredCondominiums = condominiums.filter(condominium => {
+    return condominium.name.toLowerCase().includes(searchText.toLowerCase());
+  });
+
+  const options = filteredCondominiums.map(condominium => ({
+    value: condominium.id,
+    label: condominium.name
+  }));
  
   return (
     <>
@@ -90,20 +103,18 @@ const PickUpsPage = () => {
             </Button>
           </Link>
         </div>
-        <Form.Select
-          className="mb-3"
-          onChange={(event) => setCondominiumId(event.target.value)}
-        >
-          {condominiums.length === 0 ? (
-            <option>Carregando</option>
-          ) : (
-            condominiums.map((e, key) => (
-              <option value={e.id} key={key}>
-                {e.name}
-              </option>
-            ))
-          )}
-        </Form.Select>
+        <Form.Group className="mb-3">
+                <Form.Label>Ponto de Coleta</Form.Label>
+                <Select
+                  className={styles.customSelect}
+                  options={options}
+                  onChange={(selectedOption) => setCondominiumId(selectedOption.value)}
+                  placeholder="Escolha o ponto de coleta"
+                  isDisabled={!!params.id}
+                  onInputChange={(value) => setSearchText(value)}
+                  inputValue={searchText}
+                />
+              </Form.Group>
         {loading ? (
           <div className="spinner-border text-primary mx-auto" role="status" />
         ) : pickUps.length === 0 ? (
