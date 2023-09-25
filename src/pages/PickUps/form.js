@@ -143,12 +143,13 @@ const PickUpForm = () => {
 
       const currentDate = new Date();
       //const selectedDate = new Date(date); // 'date' é o valor fornecido pelo usuário
-      const selectedDate = moment(date, 'YYYY-MM-DD').toDate();
-      selectedDate.setHours(currentDate.getHours() - 3);
-      selectedDate.setMinutes(currentDate.getMinutes());
-      selectedDate.setSeconds(currentDate.getSeconds());
+      // const selectedDate = moment(date, 'YYYY-MM-DD').toDate();
+      // selectedDate.setHours(currentDate.getHours() - 3);
+      // selectedDate.setMinutes(currentDate.getMinutes());
+      // selectedDate.setSeconds(currentDate.getSeconds());
       
-      const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
+      // const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
+      const formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " ");
       
       const requestBody = {
         truckId,
@@ -158,7 +159,7 @@ const PickUpForm = () => {
         latitude: latitude,
         longitude: longitude,
         obs,
-        createdAt: formattedDateTime,
+        createdAt: formattedDate,//formattedDateTime,
         userId: userId,
         discardplaceId: null
       };
@@ -267,7 +268,7 @@ const PickUpForm = () => {
                   onChange={(e) => setSendMail(e.target.checked)}
                 />
               </Form.Group>
-              <Form.Group className="mb-3">
+              {/* <Form.Group className="mb-3">
                 <Form.Label>Data</Form.Label>
                 <Form.Control
                   type="date"
@@ -280,7 +281,7 @@ const PickUpForm = () => {
                   }
                 }}
               />
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group className="mb-3">
               <Form.Label>Tipo de resíduo</Form.Label>
               <Form.Select
