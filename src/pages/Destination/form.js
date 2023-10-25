@@ -149,13 +149,13 @@ const Destination = () => {
             const currentDate = new Date();
             const formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " ");
             
-            // const selectedDate = moment(date, 'YYYY-MM-DD').toDate(); // 'date' é o valor fornecido pelo usuário
+            const selectedDate = moment(date, 'YYYY-MM-DD').toDate(); // 'date' é o valor fornecido pelo usuário
 
-            // selectedDate.setHours(currentDate.getHours() - 3); // Subtrai 3 horas para ajustar ao fuso horário de Brasilia 
-            // selectedDate.setMinutes(currentDate.getMinutes());
-            // selectedDate.setSeconds(currentDate.getSeconds());
+            selectedDate.setHours(currentDate.getHours() - 3); // Subtrai 3 horas para ajustar ao fuso horário de Brasilia 
+            selectedDate.setMinutes(currentDate.getMinutes());
+            selectedDate.setSeconds(currentDate.getSeconds());
 
-            // const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
+            const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
 
             if(!latitude || latitude == '') {
                 setAlert({
@@ -169,7 +169,7 @@ const Destination = () => {
                 latitude: latitude,
                 longitude: longitude,
                 discardplaceId: discardPlaceId,
-                discartedAt: formattedDate,//formattedDateTime,
+                discartedAt: formattedDateTime,//formattedDate,
                 //  factor,
                 pickups: pickups
             };
@@ -312,7 +312,7 @@ const Destination = () => {
                                     onChange={(event) => setWeight(event.target.value)}
                                 />
                             </Form.Group>
-                            {/* <Form.Group className="mb-3 ">
+                            <Form.Group className="mb-3 ">
                                 <Form.Label>Data</Form.Label>
                                 <Form.Control
                                     type="date"
@@ -320,7 +320,7 @@ const Destination = () => {
                                     defaultValue={date}
                                     onChange={(event) => setDate(event.target.value)}
                                 />
-                            </Form.Group> */}
+                            </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Locais de destinação</Form.Label>
                                 <Form.Select
