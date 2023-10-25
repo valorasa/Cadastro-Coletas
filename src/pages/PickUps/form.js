@@ -148,15 +148,14 @@ const PickUpForm = () => {
       const longitude = position.coords.longitude.toString();
 
       const currentDate = new Date();
-      const formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " ");
+      //const selectedDate = new Date(date); // 'date' é o valor fornecido pelo usuário
+      // const selectedDate = moment(date, 'YYYY-MM-DD').toDate();
+      // selectedDate.setHours(currentDate.getHours() - 3);
+      // selectedDate.setMinutes(currentDate.getMinutes());
+      // selectedDate.setSeconds(currentDate.getSeconds());
       
-      const selectedDate = moment(date, 'YYYY-MM-DD').toDate(); // 'date' é o valor fornecido pelo usuário
-
-      selectedDate.setHours(currentDate.getHours() - 3); // Subtrai 3 horas para ajustar ao fuso horário de Brasilia 
-      selectedDate.setMinutes(currentDate.getMinutes());
-      selectedDate.setSeconds(currentDate.getSeconds());
-
-      const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
+      // const formattedDateTime = selectedDate.toISOString().replace('T', ' ').slice(0, 19);
+      const formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " ");
       
       const requestBody = {
         truckId,
@@ -166,7 +165,7 @@ const PickUpForm = () => {
         latitude: latitude,
         longitude: longitude,
         obs,
-        createdAt: formattedDateTime,//formattedDateTime,
+        createdAt: formattedDate,//formattedDateTime,
         userId: userId,
         discardplaceId: null
       };
