@@ -87,6 +87,12 @@ const PickUpsPage = () => {
     label: condominium.name
   }));
  
+  function dateFormat(date) {
+    const isoDate = new Date(date).toISOString();
+    const adjustedDate = new Date(new Date(isoDate).getTime() - 3 * 60 * 60 * 1000);
+    return adjustedDate.toLocaleString();
+  }
+  
   return (
     <>
       <NavigationBar />

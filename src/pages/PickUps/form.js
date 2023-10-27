@@ -148,7 +148,7 @@ const PickUpForm = () => {
       const longitude = position.coords.longitude.toString();
 
       const currentDate = new Date();
-      currentDate.setHours(currentDate.getHours() - 3);
+     // currentDate.setHours(currentDate.getHours() - 3);
       const formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " ");
       
       const requestBody = {
