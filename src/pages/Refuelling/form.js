@@ -118,7 +118,7 @@ const Refuelling = () => {
                             <option value="BH">BH</option>
                         </Form.Select>
                         <Form.Group className="mb-3 ">
-                            <Form.Label>Quantidade Abastecida:</Form.Label>
+                            <Form.Label>Quantidade Abastecida em Litros:</Form.Label>
                             <Form.Control
                                 placeholder="Quantidade"
                                 value={literskwsQuantity}
