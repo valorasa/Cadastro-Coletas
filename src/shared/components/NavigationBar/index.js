@@ -20,6 +20,12 @@ const NavigationBar = () => {
             >
               Destinação
             </NavLink>
+            <NavLink
+              to="/refuelling"
+              className="text-white mx-2 text-decoration-none"
+            >
+              Abastecimento
+            </NavLink>
           </Nav>
         </Container>
       </Navbar>
