@@ -43,12 +43,16 @@ const Refuelling = () => {
         setLoading(true);
 
         try {
+            const literskwsQuantityFormatted = literskwsQuantity.toString().replace(",", ".");
+            const literkwCostFormatted = literkwCost.toString().replace(",", ".");
+            const odometerFormatted = odometer.toString().replace(",", ".");
+            
             const requestBodyRefuelling = {
                 truckId: truckId,
                 city: branch,
-                literskwsQuantity: literskwsQuantity,
-                literkwCost: literkwCost,
-                odometer: odometer,
+                literskwsQuantity: parseFloat(literskwsQuantityFormatted),
+                literkwCost: parseFloat(literkwCostFormatted),
+                odometer: parseFloat(odometerFormatted),
             };
 
             await axiosInstance.post("/trucks-refuelling/save", requestBodyRefuelling);
