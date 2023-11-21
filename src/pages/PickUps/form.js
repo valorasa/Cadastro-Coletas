@@ -378,16 +378,6 @@ const PickUpForm = () => {
                 />
               </Form.Group>
             )}
-            <Form.Group className="mb-3 ">
-              <Form.Label>Observações</Form.Label>
-              <Form.Control
-                placeholder="Observações"
-                defaultValue={obs}
-                as="textarea"
-                rows={3}
-                onChange={(event) => setObs(event.target.value)}
-              />
-            </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Caminhão</Form.Label>
               <Form.Select
@@ -407,6 +397,16 @@ const PickUpForm = () => {
                 )}
               </Form.Select>
               </Form.Group>
+              <Form.Group className="mb-3 ">
+              <Form.Label>Observações</Form.Label>
+              <Form.Control
+                placeholder="Observações"
+                defaultValue={obs}
+                as="textarea"
+                rows={3}
+                onChange={(event) => setObs(event.target.value)}
+              />
+            </Form.Group>
               <Row>
                 <Button
                 style={{backgroundColor: "#35a854"}}
