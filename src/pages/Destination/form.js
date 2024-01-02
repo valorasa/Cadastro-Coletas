@@ -30,7 +30,83 @@ const Destination = () => {
     const [date, setDate] = useState();
 
     const [requestBodyToShow, setRequestBodyToShow] = useState(null);
-  
+
+    //-----------------------------------------------------------------------------------------filtro   
+    const [mostrarTipos, setMostrarTipos] = useState(false);
+    const [tiposSelecionados, setTiposSelecionados] = useState([]);
+    const [selectedCollects, setSelectedCollects] = useState([]);
+    const [selectAllCollects, setSelectAllCollects] = useState(false);
+
+    const toggleMostrarTipos = () => {
+        setMostrarTipos(!mostrarTipos);
+    };
+    const handleTipoCheckboxChange = (tipo) => {
+        // Adiciona ou remove o tipo dos tipos selecionados
+        setTiposSelecionados((prevTipos) => {
+            if (prevTipos.includes(tipo)) {
+                return prevTipos.filter((t) => t !== tipo);
+            } else {
+                return [...prevTipos, tipo];
+            }
+        });
+    };
+    const tiposUnicos = Array.from(new Set(collectsTruck.map((collect) => collect.type.name)));
+
+    const toggleSelectAllCollects = () => {
+        setSelectAllCollects(!selectAllCollects);
+
+        setSelectedCollects((prevSelected) => {
+            const allCollectIds = collectsTruck
+            .filter((collect) => tiposSelecionados.length === 0 || tiposSelecionados.includes(collect.type.name))
+            .map((collect) => collect.id)
+
+            if (selectAllCollects) {
+                // Desmarcar todos os checkboxes
+                setPickups([]);
+                setSelectedWeightSum(0);
+                return [];
+            } else {
+                // Marcar todos os checkboxes
+                setPickups(allCollectIds);
+                const totalWeight = allCollectIds.reduce(
+                    (sum, collectId) => sum + parseFloat(getCollectWeight(collectId)),
+                    0
+                );
+                setSelectedWeightSum(totalWeight);
+                return allCollectIds;
+            }
+        });
+    };
+
+    const handleCheckboxChange = (collectId, collectWeight) => {
+        setSelectedCollects((prevSelected) => {
+            if (prevSelected.includes(collectId)) {
+                // Remove a coleta dos pickups
+                setPickups((prevPickups) => prevPickups.filter((id) => id !== collectId));
+                return prevSelected.filter((id) => id !== collectId);
+            } else {
+                // Adiciona a coleta aos pickups
+                setPickups((prevPickups) => [...prevPickups, collectId]);
+                return [...prevSelected, collectId];
+            }
+        });
+
+        setSelectedWeightSum((prevWeightSum) => {
+            const isChecked = selectedCollects.includes(collectId);
+
+            return isChecked
+                ? prevWeightSum - parseFloat(collectWeight)
+                : prevWeightSum + parseFloat(collectWeight);
+        });
+    };
+
+    const getCollectWeight = (collectId) => {
+        const collect = collectsTruck.find((collect) => collect.id === collectId);
+        return collect ? collect.weight : 0;
+    };
+
+
+    //-----------------------------------------------------------------------------------------filtro 
 
     async function getTrucks() {
         setLoading(true);
@@ -98,22 +174,22 @@ const Destination = () => {
         setSelectedWeightSum(0);
       };
 
-    const handleCheckboxChange = (event) => {
-        const collectId = event.target.id.split("-")[1];
+    // const handleCheckboxChange = (event) => {
+    //     const collectId = event.target.id.split("-")[1];
 
-        if (event.target.checked) {
-            setPickups([...pickups, collectId])
-        } else {
-            setPickups(pickups.filter((id) => id !== collectId));
-        }
+    //     if (event.target.checked) {
+    //         setPickups([...pickups, collectId])
+    //     } else {
+    //         setPickups(pickups.filter((id) => id !== collectId));
+    //     }
 
-        const isChecked = event.target.checked;
-        const itemWeight = parseFloat(event.target.value);;
-        const currentWeightSum = parseFloat(selectedWeightSum);
-        setSelectedWeightSum(
-            isChecked ? currentWeightSum + itemWeight : currentWeightSum - itemWeight
-        );
-    };
+    //     const isChecked = event.target.checked;
+    //     const itemWeight = parseFloat(event.target.value);;
+    //     const currentWeightSum = parseFloat(selectedWeightSum);
+    //     setSelectedWeightSum(
+    //         isChecked ? currentWeightSum + itemWeight : currentWeightSum - itemWeight
+    //     );
+    // };
 
     const validateForm = () => {
         const requiredFields = [truckId, discardPlaceId, weight, date];
@@ -188,12 +264,14 @@ const Destination = () => {
             //     message: "salvo",
             // });
  
-            setTruckId("");
-            setCollectsTruck([]);
+            // setTruckId("");
+            // setCollectsTruck([]);
             setSelectedWeightSum(0);
             setWeight("");
-            setDisardPlaceId("");
+            // setDisardPlaceId("");
             setPickups([]);
+            setSelectedCollects([])
+            setSelectAllCollects(false);
 
             setTimeout(() => {
                 setAlert(null); 
@@ -208,26 +286,11 @@ const Destination = () => {
             });
 
             }
-            console.log(err)
-            // let errorMessage = "Erro de validação dos dados, confirme as entradas.";
-
-            // // Adicione mensagens de erro específicas para campos que falharam na validação
-            // if (!truckId || truckId === "") {
-            //     errorMessage += "\n- O campo 'Caminhão' é obrigatório.";
-            // }
-    
-            // if (!discardPlaceId || discardPlaceId === "") {
-            //     errorMessage += "\n- O campo 'Local de destinação' é obrigatório.";
-            // }
-    
-            // if (!weight || weight === "") {
-            //     errorMessage += "\n- O campo 'Pesagem' é obrigatório.";
-            // }
 
           
             setAlert({
                 success: false,
-                message:err.message,
+                message:err.response.data.message,
             });
 
             setTruckId("");
@@ -236,6 +299,8 @@ const Destination = () => {
             setWeight("");
             setDisardPlaceId("");
             setPickups([]);
+            setSelectedCollects([])
+            setSelectAllCollects(false);
 
             setTimeout(() => {
                 setAlert(null); 
@@ -285,21 +350,54 @@ const Destination = () => {
                                 </Form.Select>
                             </Form.Group>
                             {!!truckId && collectsTruck.length > 0 ? (
-                                <Form.Group>
-                                    <Form.Label>Condomínios</Form.Label>
-                                    {collectsTruck.map((collect) => (
-                                        <div key={collect.id}>
-                                            <Form.Check
-                                                type="checkbox"
-                                                label={`${collect.condominium.name || "Nome não disponível"} - Peso: ${collect.weight} ${collect.type.name}`}
-                                                id={`collect-${collect.id}`}
-                                                value={collect.weight}
-                                                onChange={handleCheckboxChange}
-                                            />
-                                        </div>
-                                    ))}
-                                </Form.Group>
-                            ) : null}
+                <Form.Group>
+                    <Form.Label>
+                        Condomínios{' '}
+                        <Button  onClick={toggleMostrarTipos}>
+                            Filtro
+                        </Button>
+                    </Form.Label>
+                    {mostrarTipos && (
+                        <div>
+                            <strong>Tipos:</strong>
+                            <ul>
+                                {tiposUnicos.map((tipo) => (
+                                    <li key={tipo}>
+                                        <Form.Check
+                                            type="checkbox"
+                                            label={tipo}
+                                            id={`tipo-${tipo}`}
+                                            checked={tiposSelecionados.includes(tipo)}
+                                            onChange={() => handleTipoCheckboxChange(tipo)}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    <Form.Check
+                    type="checkbox"
+                    label="Selecionar Todos"
+                    id="select-all"
+                    checked={selectAllCollects}
+                    onChange={toggleSelectAllCollects}
+                />
+                    {collectsTruck.map((collect) => (
+                        (tiposSelecionados.length === 0 || tiposSelecionados.includes(collect.type.name)) && (
+                            <div key={collect.id}>
+                                <Form.Check
+                                    type="checkbox"
+                                    label={`${collect.condominium.name || "Nome não disponível"} - Peso: ${collect.weight} ${collect.type.name}`}
+                                    id={`collect-${collect.id}`}
+                                    value={collect.weight}
+                                    onChange={() => handleCheckboxChange(collect.id, collect.weight)}
+                                    checked={selectedCollects.includes(collect.id)}
+                                />
+                            </div>
+                        )
+                    ))}
+                </Form.Group>
+            ) : null}
                             <Form.Group>
                                 <Form.Label>Peso Total:</Form.Label>
                                 <Form.Control type="text" value={selectedWeightSum} readOnly />

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import NavigationBar from "../../shared/components/NavigationBar";
 import { Alert, Form, Row, Button } from "react-bootstrap";
 
+
 const Refuelling = () => {
     const params = useParams();
     const navigate = useNavigate();
@@ -39,13 +40,50 @@ const Refuelling = () => {
         setBranch(event.target.value);
     };
 
+    const handleLiterskwsQuantity = (event) => {
+        const inputValue = event.target.value;
+    
+        // Regex que aceita números, ponto e vírgula
+        const numberRegex = /^[0-9.,]*$/;
+    
+        // Verifica se o valor inserido é um número ou um número decimal antes de atualizar o estado
+        if (numberRegex.test(inputValue) || inputValue === ',') {
+            setLiterskwsQuantity(inputValue);
+        }
+    };
+
+
+    const handleLiterkwCostChange = (event) => {
+        const inputValue = event.target.value;
+    
+        // Regex que aceita números, ponto e vírgula
+        const numberRegex = /^[0-9.,]*$/;
+    
+        // Verifica se o valor inserido é um número ou um número decimal antes de atualizar o estado
+        if (numberRegex.test(inputValue) || inputValue === ',') {
+            setLiterkwCost(inputValue);
+        }
+    };
+
+    const handleOdometerChange = (event) => {
+        const inputValue = event.target.value;
+    
+        // Regex que aceita números, ponto e vírgula
+        const numberRegex = /^[0-9.,]*$/;
+    
+        // Verifica se o valor inserido é um número ou um número decimal antes de atualizar o estado
+        if (numberRegex.test(inputValue) || inputValue === ',') {
+            setOdometer(inputValue);
+        }
+    };
+  
     async function saveRefuelling() {
         setLoading(true);
 
         try {
-            const literskwsQuantityFormatted = literskwsQuantity.toString().replace(",", ".");
-            const literkwCostFormatted = literkwCost.toString().replace(",", ".");
-            const odometerFormatted = odometer.toString().replace(",", ".");
+            const literskwsQuantityFormatted = literskwsQuantity.toString().replace(".", "").replace(",", ".");
+            const literkwCostFormatted = literkwCost.toString().replace(".", "").replace(",", ".");
+            const odometerFormatted = odometer.toString().replace(".", "").replace(",", ".");
             
             const requestBodyRefuelling = {
                 truckId: truckId,
@@ -55,7 +93,8 @@ const Refuelling = () => {
                 odometer: parseFloat(odometerFormatted),
             };
 
-            await axiosInstance.post("/trucks-refuelling/save", requestBodyRefuelling);
+            const response = await axiosInstance.post("/trucks-refuelling/save", requestBodyRefuelling);
+            console.log(response)
             
             setBranch("")
             setTrucks("")
@@ -67,10 +106,9 @@ const Refuelling = () => {
             navigate("./", { replace: true });
         } catch (err) {
 
-
             setAlert({
                 success: false,
-                message: err.message,
+                message: err.response.data.message,
             });
 
         }
@@ -126,7 +164,8 @@ const Refuelling = () => {
                             <Form.Control
                                 placeholder="Quantidade"
                                 value={literskwsQuantity}
-                                onChange={(event) => setLiterskwsQuantity(event.target.value)}
+                                onChange={handleLiterskwsQuantity}
+                               // onChange={(event) => setLiterskwsQuantity(event.target.value)}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3 ">
@@ -134,15 +173,17 @@ const Refuelling = () => {
                             <Form.Control
                                 placeholder="Valor"
                                 value={literkwCost}
-                                onChange={(event) => setLiterkwCost(event.target.value)}
+                                onChange={handleLiterkwCostChange}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3 ">
                             <Form.Label>Odometro:</Form.Label>
                             <Form.Control
+                                type="number"
                                 placeholder="Valor"
                                 value={odometer}
-                                onChange={(event) => setOdometer(event.target.value)}
+                                onChange={handleOdometerChange}
+                                //onChange={(event) => setOdometer(event.target.value)}   
                             />
                         </Form.Group>
                         <Row>
