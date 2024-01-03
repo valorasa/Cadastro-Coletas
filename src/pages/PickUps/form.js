@@ -338,7 +338,7 @@ const PickUpForm = () => {
             </Form.Group>
             {bagType && bagType !== "Bag E" && ( // Renderizar a seção de quantidade de sacos apenas para os tipos de bag que não são "Bag D"
               <Form.Group className="mb-3 ">
-                <Form.Label>Quantidade de sacos</Form.Label>
+                <Form.Label>Quantidade</Form.Label>
                 <Form.Control
                   type="number"
                   placeholder="Quantidade"
