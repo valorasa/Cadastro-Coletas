@@ -264,7 +264,7 @@ const Destination = () => {
             //     message: "salvo",
             // });
  
-            // setTruckId("");
+             setTruckId("");
             // setCollectsTruck([]);
             setSelectedWeightSum(0);
             setWeight("");
