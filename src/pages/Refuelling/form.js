@@ -158,6 +158,7 @@ const Refuelling = () => {
                             <option value="">Selecione a cidade</option>
                             <option value="SP">SP</option>
                             <option value="BH">BH</option>
+                            <option value="RJ">RJ</option>
                         </Form.Select>
                         <Form.Group className="mb-3 ">
                             <Form.Label>Quantidade Abastecida em Litros:</Form.Label>
