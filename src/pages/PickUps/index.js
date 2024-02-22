@@ -10,17 +10,17 @@ import { useParams } from "react-router-dom";
 
 const PickUpsPage = () => {
   const params = useParams();
-  const [condominiums, setCondominiums] = useState([]);
+  const [collectPoint, setcollectPoint] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pickUps, setPickUps] = useState([]);
-  const [condominiumId, setCondominiumId] = useState(1 || "1");
+  const [collectPointId, setcollectPointId] = useState(1 || "1");
   const [typeWastes, setTypeWastes] = useState([]);
   const [trucks, setTrucks] = useState([]);
   const [searchText, setSearchText] = useState('');
-  async function getCondominiums() {
-    const response = await axiosInstance.get("/condominiums");
+  async function getcollectPoint() {
+    const response = await axiosInstance.get("/collect-point/find");
     const data = response.data;
-    setCondominiums(data.filter((item) => item.active === 1 || "1"));
+    setcollectPoint(data.filter((item) => item.active === 1 || "1"));
   }
   async function getTypeWastes() {
     setLoading(true);
@@ -35,7 +35,7 @@ const PickUpsPage = () => {
     setLoading(false);
   }
   useEffect(() => {
-    getCondominiums();
+    getcollectPoint();
     getTypeWastes();
     getTrucks();
   }, []);
@@ -43,7 +43,7 @@ const PickUpsPage = () => {
     setLoading(true);
     const response = await axiosInstance.get("/pickups");
     const data = response.data;
-    const result = data.filter((e) => String(e.condominiumId) === String(condominiumId));
+    const result = data.filter((e) => String(e.collectPointId) === String(collectPointId));
 
     const sorted = result.sort(function (a, b) {
       return new Date(b.createdAt) - new Date(a.createdAt);
@@ -53,7 +53,7 @@ const PickUpsPage = () => {
   }
   useEffect(() => {
     getPickUps();
-  }, [condominiumId]);
+  }, [collectPointId]);
 
   function dateFormat(date) {
     const formattedDate = new Date(date);
@@ -78,13 +78,13 @@ const PickUpsPage = () => {
     }
   }
 
-  const filteredCondominiums = condominiums.filter(condominium => {
-    return condominium.name.toLowerCase().includes(searchText.toLowerCase());
+  const filteredcollectPoint = collectPoint.filter(collectPoint => {
+    return collectPoint.name.toLowerCase().includes(searchText.toLowerCase());
   });
 
-  const options = filteredCondominiums.map(condominium => ({
-    value: condominium.id,
-    label: condominium.name
+  const options = filteredcollectPoint.map(collectPoint => ({
+    value: collectPoint.id,
+    label: collectPoint.name
   }));
  
   function dateFormat(date) {
@@ -114,7 +114,7 @@ const PickUpsPage = () => {
                 <Select
                   className={styles.customSelect}
                   options={options}
-                  onChange={(selectedOption) => setCondominiumId(selectedOption.value)}
+                  onChange={(selectedOption) => setcollectPointId(selectedOption.value)}
                   placeholder="Escolha o ponto de coleta"
                   isDisabled={!!params.id}
                   onInputChange={(value) => setSearchText(value)}

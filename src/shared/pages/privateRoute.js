@@ -6,8 +6,8 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
-    if (!token) {
+    const token = localStorage.getItem("accessToken");
+    if (!token || token == '' || token == undefined || token == null) {
       navigate("/");
 
     } else {

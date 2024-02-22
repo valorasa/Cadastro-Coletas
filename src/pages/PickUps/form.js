@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import NavigationBar from "../../shared/components/NavigationBar";
 import { Alert, Form, Button, Row } from "react-bootstrap";
 import styles from '../../style/form.module.css';
-import jwtDecode from 'jwt-decode';
+//import jwtDecode from 'jwt-decode';
 import { useRef } from 'react';
 import moment from 'moment';
 import Select from 'react-select';
@@ -26,8 +26,8 @@ const PickUpForm = () => {
   const [truckId, setTruckId] = useState();
   const [trucks, setTrucks] = useState([]);
 
-  const [condominiumId, setCondominiumId] = useState();
-  const [condominiums, setCondominiums] = useState([]);
+  const [collectPointId, setcollectPointId] = useState();
+  const [collectPoints, setcollectPoints] = useState([]);
   const [searchText, setSearchText] = useState('');
 
   const [typeWasteId, setTypeWasteId] = useState();
@@ -40,7 +40,7 @@ const PickUpForm = () => {
 
 
   async function findPickUp() {
-    setCondominiumId(condominiums[0].id);
+    setcollectPointId(collectPoints[0].id);
     setTruckId(trucks[0].id);
     setTypeWasteId(typeWastes[0].id);
     setDisardPlaceId(discardPlace[0].id)
@@ -53,7 +53,7 @@ const PickUpForm = () => {
       setWeight(data.weight);
       setObs(data.obs);
       setTruckId(data.truckId);
-      setCondominiumId(data.condominiumId);
+      setcollectPointId(data.collectPointId);
       setTypeWasteId(data.typeId);
       setLoading(false);
     }
@@ -61,10 +61,10 @@ const PickUpForm = () => {
 
 
   
-  async function getCondominiums() {
-    const response = await axiosInstance.get("/condominiums");
+  async function getcollectPoints() {
+    const response = await axiosInstance.get("/collect-point/find");
     const data = response.data;
-    setCondominiums(data.filter((item) => item.active === 1 || "1"));
+    setcollectPoints(data.filter((item) => item.active === 1 || "1"));
   }
 
   async function findDiscardPlace() {
@@ -98,17 +98,17 @@ const PickUpForm = () => {
 
   
   useEffect(() => {
-    getCondominiums();
+    getcollectPoints();
     getTypeWastes();
     getTrucks();
     findDiscardPlace();
   }, []);
 
   useEffect(() => {
-    if (condominiums.length > 0 && typeWastes.length > 0 && trucks.length > 0 && discardPlace.length > 0) {
+    if (collectPoints.length > 0 && typeWastes.length > 0 && trucks.length > 0 && discardPlace.length > 0) {
       findPickUp();
     }
-  }, [condominiums, typeWastes, trucks]);
+  }, [collectPoints, typeWastes, trucks]);
 
   const bagWeights = { // Objeto que mapeia o tipo de bag para o peso correspondente
     "Bag A": 16,
@@ -126,9 +126,9 @@ const PickUpForm = () => {
 
 
 
-  const accessToken = sessionStorage.getItem("accessToken");
-  const decodedToken = jwtDecode(accessToken);
-  const userId = decodedToken.sub;
+  // const accessToken = sessionStorage.getItem("accessToken");
+  // const decodedToken = jwtDecode(accessToken);
+  // const userId = decodedToken.sub;
 
 
   const handleBagSelection = (event) => {
@@ -154,13 +154,13 @@ const PickUpForm = () => {
       const requestBody = {
         truckId,
         typeId: typeWasteId,
-        condominiumId,
+        collectPointId,
         weight: weight.toString().replace(",", "."),
         latitude: latitude,
         longitude: longitude,
         obs,
         createdAt: formattedDate,//formattedDateTime,
-        userId: userId,
+        userId: "userId",
         discardplaceId: null
       };
   
@@ -170,25 +170,25 @@ const PickUpForm = () => {
 
      
 
-       const selectedCondominium = condominiums.find(cond => cond.id === condominiumId);
-       const emailTo = selectedCondominium?.managers[0]?.email || "Não informado";
+      //  const selectedCollectPoint = collectPoints.find(point => point.id === collectPointId);
+      //  const emailTo = selectedCollectPoint?.managers[0]?.email || "Não informado";
 
        const selectedTruck = trucks.find(truck => truck.id == truckId);
-       const truck = selectedTruck.plate;
+      //  const truck = selectedTruck.plate;
 
-       const selectedTypeWaste = typeWastes.find(typeWaste => typeWaste.id == typeWasteId)
-       const typeWaste = selectedTypeWaste.name
-      console.log(typeWaste)
-      if (sendMail && emailTo !== "Não informado") {
-        const requestBodyMail = {
-          emailTo,
-          truck,
-          bags: parseInt(numBags),
-          typeWaste
-        };
+      //  const selectedTypeWaste = typeWastes.find(typeWaste => typeWaste.id == typeWasteId)
+      //  const typeWaste = selectedTypeWaste.name
 
-        await axiosInstance.post("condominiums/mail", requestBodyMail);
-      }
+      // if (sendMail && emailTo !== "Não informado") {
+      //   const requestBodyMail = {
+      //     emailTo,
+      //     truck,
+      //     bags: parseInt(numBags),
+      //     typeWaste
+      //   };
+
+      //   await axiosInstance.post("collectPoints/mail", requestBodyMail);
+      // }
       setAlert({
         success: true,
         message: "Salvo com sucesso",
@@ -217,13 +217,13 @@ const PickUpForm = () => {
     event.preventDefault();
   };
 
-  const filteredCondominiums = condominiums.filter(condominium => {
-    return condominium.name.toLowerCase().includes(searchText.toLowerCase());
+  const filteredcollectPoints = collectPoints.filter(CollectPoint => {
+    return CollectPoint.name.toLowerCase().includes(searchText.toLowerCase());
   });
 
-  const options = filteredCondominiums.map(condominium => ({
-    value: condominium.id,
-    label: condominium.name
+  const options = filteredcollectPoints.map(CollectPoint => ({
+    value: CollectPoint.id,
+    label: CollectPoint.name
   }));
 
   return (
@@ -252,7 +252,7 @@ const PickUpForm = () => {
                 <Select
                   className={styles.customSelect}
                   options={options}
-                  onChange={(selectedOption) => setCondominiumId(selectedOption.value)}
+                  onChange={(selectedOption) => setcollectPointId(selectedOption.value)}
                   placeholder="Escolha o ponto de coleta"
                   isDisabled={!!params.id}
                   onInputChange={(value) => setSearchText(value)}
