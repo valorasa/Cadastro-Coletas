@@ -1,7 +1,13 @@
-import { Navbar, Container, Nav } from "react-bootstrap";
+import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 
 const NavigationBar = () => {
+function logout() {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  window.location.reload();
+}
+
   return (
     <header>
       <Navbar style={{ backgroundColor: "#35a854" }} variant="light" sticky="top">
@@ -26,7 +32,8 @@ const NavigationBar = () => {
             >
               Abastecimento
             </NavLink>
-          </Nav>
+          </Nav> 
+            <Button variant="outline-light" onClick={logout}>Logout</Button>
         </Container>
       </Navbar>
     </header>
