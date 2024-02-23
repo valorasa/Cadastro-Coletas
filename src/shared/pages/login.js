@@ -413,11 +413,11 @@ const LoginPage = () => {
                   />
                 </Form.Group>
                 <Form.Group controlId="currentPassword" className="mb-3">
-                  <Form.Label>Senha Atual</Form.Label>
+                  <Form.Label>Senha temporária</Form.Label>
                   <InputGroup>
                     <Form.Control
                       type={showPassword ? "text" : "password"}
-                      placeholder="Senha atual"
+                      placeholder="Senha temporária"
                       value={currentPassword}
                       onChange={(event) => setCurrentPassword(event.target.value)}
                       required
@@ -428,7 +428,7 @@ const LoginPage = () => {
                   </InputGroup>
                 </Form.Group>
                 <Form.Group controlId="newPassword" className="mb-3">
-                  <Form.Label>Nova Senha</Form.Label>
+                  <Form.Label>Criar Senha</Form.Label>
                   <InputGroup className="mb-3">
                     <Form.Control
                       type={showNewPassword ? "text" : "password"}
