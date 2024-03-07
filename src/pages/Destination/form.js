@@ -64,6 +64,7 @@ const Destination = () => {
                 // Desmarcar todos os checkboxes
                 setPickups([]);
                 setSelectedWeightSum(0);
+                setWeight(0);
                 return [];
             } else {
                 // Marcar todos os checkboxes
@@ -73,6 +74,7 @@ const Destination = () => {
                     0
                 );
                 setSelectedWeightSum(totalWeight);
+                setWeight(totalWeight);
                 return allCollectIds;
             }
         });
@@ -92,6 +94,13 @@ const Destination = () => {
         });
 
         setSelectedWeightSum((prevWeightSum) => {
+            const isChecked = selectedCollects.includes(collectId);
+
+            return isChecked
+                ? prevWeightSum - parseFloat(collectWeight)
+                : prevWeightSum + parseFloat(collectWeight);
+        });
+        setWeight((prevWeightSum) => {
             const isChecked = selectedCollects.includes(collectId);
 
             return isChecked
@@ -172,6 +181,7 @@ const Destination = () => {
     const handleTruckChange = (event) => {
         setTruckId(event.target.value);
         setSelectedWeightSum(0);
+        setWeight(0);
       };
 
     // const handleCheckboxChange = (event) => {
@@ -410,15 +420,6 @@ const Destination = () => {
                                     onChange={(event) => setWeight(event.target.value)}
                                 />
                             </Form.Group>
-                            {/* <Form.Group className="mb-3 ">
-                                <Form.Label>Data</Form.Label>
-                                <Form.Control
-                                    type="date"
-                                    placeholder="Data"
-                                    defaultValue={date}
-                                    onChange={(event) => setDate(event.target.value)}
-                                />
-                            </Form.Group> */}
                             <Form.Group className="mb-3">
                                 <Form.Label>Locais de destinação</Form.Label>
                                 <Form.Select
