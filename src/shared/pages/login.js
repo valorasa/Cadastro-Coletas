@@ -237,7 +237,7 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const { data } = await axiosInstance.post('/user/login', {
+      const { data } = await axiosInstance.post('/cognito/login', {
         email: email,
         password: password,
       });
@@ -262,7 +262,7 @@ const LoginPage = () => {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axiosInstance.post('/user/create-user', {
+      const response = await axiosInstance.post('/cognito/create-user', {
         email: email,
         name: name,
       });
@@ -284,7 +284,7 @@ const LoginPage = () => {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axiosInstance.post('/user/update-password', {
+      const response = await axiosInstance.post('/cognito/update-password', {
         email: email,
         currentPassword: currentPassword,
         newPassword: newPassword
@@ -303,7 +303,7 @@ const LoginPage = () => {
 
   const loginUser = async (email, password) => {
     try {
-      const { data } = await axiosInstance.post('/user/login', {
+      const { data } = await axiosInstance.post('/cognito/login', {
         email: email,
         password: password,
       });
